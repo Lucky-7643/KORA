@@ -6,9 +6,9 @@ Setup:
   2. Enable APIs: Calendar API, Gmail API, Google Tasks API
   3. Create OAuth 2.0 credentials (Desktop application type)
   4. Download credentials.json
-  5. Place at: ~/.elysia/google_oauth/credentials.json
+  5. Place at: ~/.kora/google_oauth/credentials.json
   6. First tool call will open a browser for OAuth consent
-  7. Token saved to ~/.elysia/google_oauth/token.json (auto-refreshed)
+  7. Token saved to ~/.kora/google_oauth/token.json (auto-refreshed)
 """
 
 from __future__ import annotations
@@ -34,7 +34,7 @@ SCOPES = [
     "https://www.googleapis.com/auth/tasks",
 ]
 
-_OAUTH_DIR = Path.home() / ".elysia" / "google_oauth"
+_OAUTH_DIR = Path.home() / ".kora" / "google_oauth"
 _CREDENTIALS_PATH = _OAUTH_DIR / "credentials.json"
 _TOKEN_PATH = _OAUTH_DIR / "token.pickle"
 
@@ -57,7 +57,7 @@ def _ensure_credentials() -> Any:
             "1. Go to https://console.cloud.google.com/ → Create Project\n"
             "2. Enable: Calendar API, Gmail API, Google Tasks API\n"
             "3. Create OAuth 2.0 credentials (Desktop app type)\n"
-            "4. Download credentials.json and save to ~/.elysia/google_oauth/"
+            "4. Download credentials.json and save to ~/.kora/google_oauth/"
         )
 
     import google.auth.exceptions

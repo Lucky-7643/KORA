@@ -18,7 +18,7 @@ from typing import Any, Dict, Optional
 from ..registry import ToolError, register
 from ..backends import get_backend
 
-SCREENSHOTS_DIR = Path(os.path.expanduser("~")) / "Pictures" / "ElysiaScreenshots"
+SCREENSHOTS_DIR = Path(os.path.expanduser("~")) / "Pictures" / "KoraScreenshots"
 
 
 def _image_to_b64(img, fmt="PNG", quality=70) -> str:

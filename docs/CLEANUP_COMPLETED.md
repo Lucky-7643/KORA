@@ -5,7 +5,7 @@
 
 ## Summary
 
-Elysia-AI repository has been cleaned up and professionalized for production use.
+Kora-AI repository has been cleaned up and professionalized for production use.
 
 ## Files Removed
 
@@ -28,7 +28,7 @@ Elysia-AI repository has been cleaned up and professionalized for production use
 - ✅ `src/App.tsx` - 9 console.log/error statements
 - ✅ `src/components/BrowserAgent.tsx` - Navigation and YouTube search logs
 - ✅ `src/components/MemoryDashboard.tsx` - Error logging
-- ✅ `src/components/ElysiaCoreVisualizer.tsx` - Video error warnings
+- ✅ `src/components/KoraCoreVisualizer.tsx` - Video error warnings
 - ✅ `src/components/TextChatFallback.tsx` - Fallback mode logging
 - ✅ `src/components/TranscriptPanel.tsx` - Emotion debug logging
 
@@ -39,8 +39,8 @@ Elysia-AI repository has been cleaned up and professionalized for production use
 - ✅ `src/server/reminders.ts` - Fixed import paths
 
 ### Start Scripts Updated
-- ✅ `start_elysia.sh` - Removed venv references, updated to use `python scripts/run_agent.py`
-- ✅ `start_elysia.bat` - Updated paths and simplified output
+- ✅ `start_kora.sh` - Removed venv references, updated to use `python scripts/run_agent.py`
+- ✅ `start_kora.bat` - Updated paths and simplified output
 
 ## Build Verification
 
@@ -54,7 +54,7 @@ Elysia-AI repository has been cleaned up and professionalized for production use
 ## Directory Structure (Production-Ready)
 
 ```
-Elysia-AI/
+Kora-AI/
 ├── .env.local              # Environment template (user configs here)
 ├── .gitignore              # Ignores node_modules, dist, .env, etc.
 ├── src/
@@ -75,8 +75,8 @@ Elysia-AI/
 ├── agent/                  # Python desktop agent
 ├── public/                 # Static assets
 ├── dist/                   # Built output (git-ignored)
-├── start_elysia.sh         # Linux/macOS launcher
-├── start_elysia.bat        # Windows launcher
+├── start_kora.sh         # Linux/macOS launcher
+├── start_kora.bat        # Windows launcher
 └── package.json            # Node dependencies
 ```
 
@@ -112,8 +112,8 @@ npm install
 pip install -r agent/requirements.txt
 
 # Start development
-./start_elysia.sh          # Linux/macOS
-start start_elysia.bat     # Windows
+./start_kora.sh          # Linux/macOS
+start start_kora.bat     # Windows
 ```
 
 ### Production

@@ -1,5 +1,5 @@
 /**
- * Tool usage guidance for ELYSIA's 93 desktop automation tools.
+ * Tool usage guidance for KORA's 93 desktop automation tools.
  * Instructs the AI on how and when to use each tool category.
  */
 
@@ -48,7 +48,7 @@ export const TOOL_USAGE_GUIDE = `
 ### Power Management (Requires Confirmation)
 - **requestPowerAction(type)**: Request restart/shutdown (returns confirmation token)
 - **executePowerAction(token)**: Execute after user confirms
-- **shutdownElysia()**: Gracefully shutdown the assistant
+- **shutdownKora()**: Gracefully shutdown the assistant
 
 ### Terminal & Coding
 - **runTerminalCommand(cmd)**: Execute terminal commands (subject to safety blacklist)

@@ -1,10 +1,10 @@
 {
-  "name": "elysia",
-  "productName": "ELYSIA",
+  "name": "kora",
+  "productName": "KORA",
   "author": "Sarang Gajanan Rao",
   "license": "UNLICENSED",
   "description": "Voice Assistant for Desktop",
-  "homepage": "https://github.com/SarangRao20",
+  "homepage": "https://github.com/Lucky-7643/KORA",
   "private": true,
   "version": "1.0.0",
   "type": "module",

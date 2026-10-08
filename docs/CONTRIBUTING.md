@@ -1,4 +1,4 @@
-# Contributing to ELYSIA
+# Contributing to KORA
 
 Thanks for your interest! This is a personal project by **Sarang (SarangRao20)**, but contributions and suggestions are welcome.
 
@@ -37,7 +37,7 @@ By submitting a pull request, you grant the author the right to use and include 
 
 ## Reporting Issues
 
-Open an issue at [github.com/SarangRao20/Elysia-AI/issues](https://github.com/SarangRao20/Elysia-AI/issues) with:
+Open an issue at [github.com/Lucky-7643/KORA/issues](https://github.com/Lucky-7643/KORA/issues) with:
 - What you were doing
 - What happened vs what you expected
 - Relevant logs (check browser console + `agent/server.py` output)

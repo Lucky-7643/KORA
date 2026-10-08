@@ -1,17 +1,17 @@
 """
-Elysia Desktop Control Agent — frozen entrypoint.
+Kora Desktop Control Agent — frozen entrypoint.
 
-This is the script PyInstaller freezes into `Elysia-agent.exe`. It runs the
+This is the script PyInstaller freezes into `Kora-agent.exe`. It runs the
 FastAPI agent with uvicorn using the app *object* (not an import string), which
 is the reliable way to launch inside a PyInstaller bundle. Logs are written to
 the per-user data directory so failures are never silent, even with no console.
 
-Run (frozen):   Elysia-agent.exe
+Run (frozen):   Kora-agent.exe
 Run (dev):      python run_agent.py
 Environment:
-    ELYSIA_AGENT_HOST   default 127.0.0.1
-    ELYSIA_AGENT_PORT   default 8765
-    ELYSIA_DATA_DIR     where logs/ is written (default: cwd)
+    KORA_AGENT_HOST   default 127.0.0.1
+    KORA_AGENT_PORT   default 8765
+    KORA_DATA_DIR     where logs/ is written (default: cwd)
 """
 
 from __future__ import annotations
@@ -29,7 +29,7 @@ if str(_ROOT) not in sys.path:
 
 
 def _resolve_data_dir() -> Path:
-    data = os.environ.get("ELYSIA_DATA_DIR") or os.getcwd()
+    data = os.environ.get("KORA_DATA_DIR") or os.getcwd()
     logs = Path(data) / "logs"
     try:
         logs.mkdir(parents=True, exist_ok=True)
@@ -59,7 +59,7 @@ def _configure_logging(data_dir: Path) -> None:
 def main() -> None:
     data_dir = _resolve_data_dir()
     _configure_logging(data_dir)
-    log = logging.getLogger("Elysia.agent.boot")
+    log = logging.getLogger("Kora.agent.boot")
 
     try:
         from dotenv import load_dotenv
@@ -67,10 +67,10 @@ def main() -> None:
     except Exception:
         pass
 
-    host = os.environ.get("ELYSIA_AGENT_HOST", "127.0.0.1")
-    port = int(os.environ.get("ELYSIA_AGENT_PORT", "8765"))
+    host = os.environ.get("KORA_AGENT_HOST", "127.0.0.1")
+    port = int(os.environ.get("KORA_AGENT_PORT", "8765"))
     frozen = getattr(sys, "frozen", False)
-    log.info("Starting Elysia agent (frozen=%s) on %s:%d", frozen, host, port)
+    log.info("Starting Kora agent (frozen=%s) on %s:%d", frozen, host, port)
 
     try:
         from agent.server import app

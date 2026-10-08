@@ -1,5 +1,5 @@
 """
-ELYSIA Desktop Control Agent — Central tool registry.
+KORA Desktop Control Agent — Central tool registry.
 
 Each tool module registers handlers into a flat dict `TOOLS` mapping
 tool_name -> callable(args: dict) -> dict.
@@ -75,7 +75,7 @@ def register(name: str):
     return deco
 
 
-# The set of all tool names ELYSIA may route to this agent.
+# The set of all tool names KORA may route to this agent.
 # Kept in sync with the functionDeclarations added in src/server/index.ts.
 DESKTOP_TOOL_NAMES = [
     # ==== Applications & Websites ====
@@ -180,7 +180,7 @@ DESKTOP_TOOL_NAMES = [
     "iitmOpenCustom",
     
     # ==== Power & Shutdown ====
-    "shutdownElysia",
+    "shutdownKora",
     
     # ==== Weather ====
     "getWeather",

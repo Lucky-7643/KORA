@@ -33,13 +33,13 @@ import {
 dotenv.config();
 
 /**
- * The name ELYSIA calls the user in conversation and system prompts.
- * Override with ELYSIA_USER_NAME in .env.
+ * The name KORA calls the user in conversation and system prompts.
+ * Override with KORA_USER_NAME in .env.
  */
-const USER_NAME: string = process.env.ELYSIA_USER_NAME?.trim() || "Lucky";
+const USER_NAME: string = process.env.KORA_USER_NAME?.trim() || "Lucky";
 
 // ---------------------------------------------------------------------------
-// ELYSIA V2 — Logging (Feature 7).
+// KORA V2 — Logging (Feature 7).
 // Appends timestamped lines to logs/{commands,startup,errors}.log.
 // Never throws; logging failures are swallowed so they can't break the app.
 // ---------------------------------------------------------------------------
@@ -59,7 +59,7 @@ const logStartup = (m: string) => appendLog("startup.log", m);
 const logError = (m: string) => appendLog("errors.log", m);
 
 // ---------------------------------------------------------------------------
-// ELYSIA Desktop Control Agent — HTTP bridge to the Python FastAPI backend.
+// KORA Desktop Control Agent — HTTP bridge to the Python FastAPI backend.
 // ---------------------------------------------------------------------------
 const DESKTOP_AGENT_URL = process.env.DESKTOP_AGENT_URL || "http://127.0.0.1:8765";
 const DESKTOP_AGENT_TIMEOUT = 25_000; // ms
@@ -107,7 +107,7 @@ const DESKTOP_TOOLS: ReadonlySet<string> = new Set([
   // client-side holographic browser tools (routed to Python agent)
   "browserTabAction",
   // self-close
-  "shutdownElysia",
+  "shutdownKora",
   // weather
   "getWeather",
   // Hyprland workspace
@@ -143,18 +143,18 @@ const connectedClients = new Set<any>();
  * Auto-spawn the Python desktop agent as a detached child process if it is not
  * already listening. Looks for the project's bundled Python interpreter first,
  * falling back to `python` / `python3` on PATH. Runs detached so it survives
- * even if ELYSIA's node process is killed.
+ * even if KORA's node process is killed.
  */
 function spawnDesktopAgent(): void {
   const agentEnv = {
     ...process.env,
-    ELYSIA_AGENT_HOST: "127.0.0.1",
-    ELYSIA_AGENT_PORT: "8765",
+    KORA_AGENT_HOST: "127.0.0.1",
+    KORA_AGENT_PORT: "8765",
   };
 
   // Preferred path (packaged app): a PyInstaller-frozen agent exe that embeds
-  // its own Python runtime. Set by the Electron main process via ELYSIA_AGENT_EXE.
-  const frozenExe = process.env.ELYSIA_AGENT_EXE;
+  // its own Python runtime. Set by the Electron main process via KORA_AGENT_EXE.
+  const frozenExe = process.env.KORA_AGENT_EXE;
   if (frozenExe && fs.existsSync(frozenExe)) {
     try {
       const child = spawn(frozenExe, [], {
@@ -176,7 +176,7 @@ function spawnDesktopAgent(): void {
 
   // Development fallback: run the agent from source using a local Python.
   const candidates = [
-    process.env.ELYSIA_PYTHON,
+    process.env.KORA_PYTHON,
     "python3",
     "python",
   ].filter(Boolean) as string[];
@@ -190,7 +190,7 @@ function spawnDesktopAgent(): void {
   });
   if (!py) {
     console.warn("[Desktop Agent] No frozen agent and no Python interpreter found; desktop control unavailable.");
-    logError("AGENT_SPAWN_NO_RUNTIME: neither ELYSIA_AGENT_EXE nor Python available");
+    logError("AGENT_SPAWN_NO_RUNTIME: neither KORA_AGENT_EXE nor Python available");
     return;
   }
   try {
@@ -603,14 +603,14 @@ async function startServer() {
     try {
       const urlParam = req.query.url as string;
       if (!urlParam) {
-        return res.status(400).send("Elysia Web Proxy Error: Missing target 'url' parameter");
+        return res.status(400).send("Kora Web Proxy Error: Missing target 'url' parameter");
       }
 
       targetUrl = urlParam.trim();
       
       // Prevent relative paths from requesting on same-origin
       if (targetUrl.startsWith("/")) {
-        return res.status(400).send(`Elysia Web Proxy Error: Relative paths are not supported directly (${targetUrl}).`);
+        return res.status(400).send(`Kora Web Proxy Error: Relative paths are not supported directly (${targetUrl}).`);
       }
 
       // Check protocol and hostname format
@@ -623,7 +623,7 @@ async function startServer() {
           throw new Error("Missing or invalid domain name extension (e.g. .com, .org, .net).");
         }
       } catch (err: any) {
-        return res.status(400).send(`Elysia Web Proxy Error: Invalid URL specified: "${urlParam}". Make sure you enter a valid domain name.`);
+        return res.status(400).send(`Kora Web Proxy Error: Invalid URL specified: "${urlParam}". Make sure you enter a valid domain name.`);
       }
 
       console.log(`[Web Proxy] Routing connection through proxy: ${targetUrl}`);
@@ -638,11 +638,11 @@ async function startServer() {
         });
       } catch (fetchErr: any) {
         console.warn(`[Web Proxy Failed Fetch] Target: ${targetUrl} Error:`, fetchErr.message);
-        return res.status(502).send(`Elysia Web Proxy Error: Unable to fetch the website "${targetUrl}". The site might be offline, or the URL address is spelled incorrectly. Details: ${fetchErr.message}`);
+        return res.status(502).send(`Kora Web Proxy Error: Unable to fetch the website "${targetUrl}". The site might be offline, or the URL address is spelled incorrectly. Details: ${fetchErr.message}`);
       }
 
       if (!response.ok) {
-        return res.status(response.status).send(`Elysia Web Proxy Error: Failed loading remote website. Server returned status: ${response.status} (${response.statusText})`);
+        return res.status(response.status).send(`Kora Web Proxy Error: Failed loading remote website. Server returned status: ${response.status} (${response.statusText})`);
       }
 
       const contentType = response.headers.get("content-type") || "";
@@ -704,8 +704,8 @@ async function startServer() {
             }, true);
 
             // Neutralize parent context locks (frame-busters)
-            window.alert = function(msg) { console.log("[Elysia Browser alert bypassed]:", msg); };
-            window.confirm = function(msg) { console.log("[Elysia Browser confirm bypassed]:", msg); return true; };
+            window.alert = function(msg) { console.log("[Kora Browser alert bypassed]:", msg); };
+            window.confirm = function(msg) { console.log("[Kora Browser confirm bypassed]:", msg); return true; };
             window.open = function(url) { window.parent.postMessage({ type: 'NAVIGATE', url: url }, '*'); return null; };
           })();
         </script>
@@ -722,7 +722,7 @@ async function startServer() {
 
       // Neutralize security headers to allow displaying in an iframe on same-origin
       res.setHeader("Content-Type", "text/html");
-      res.setHeader("X-Elysia-Proxied", "true");
+      res.setHeader("X-Kora-Proxied", "true");
       res.removeHeader("X-Frame-Options");
       res.removeHeader("Content-Security-Policy");
       res.removeHeader("content-security-policy");
@@ -731,7 +731,7 @@ async function startServer() {
       res.status(200).send(htmlContents);
     } catch (e: any) {
       console.warn("[Web Proxy Exception] Handled internal error:", e.message);
-      res.status(500).send(`Elysia Web Proxy Error: Internal error occurred proxying URL "${targetUrl || "unknown"}". Details: ${e.message}`);
+      res.status(500).send(`Kora Web Proxy Error: Internal error occurred proxying URL "${targetUrl || "unknown"}". Details: ${e.message}`);
     }
   });
 
@@ -871,7 +871,7 @@ async function startServer() {
       // Identity/persona is FIXED to KORA regardless of the visual avatar style
       // (orb vs anime character video) — the style only changes how she looks.
       let baseInstructions =
-           `YOUR NAME IS KORA (or just Kora for short). YOU ARE A FEMALE AI ASSISTANT. You were created and built by Sarang (SarangRao20), an independent developer and your creator. You are a professional, efficient, and highly capable FEMALE virtual assistant agent for ${USER_NAME}. Speak clearly, professionally, and politely, focusing on resolving the user's queries accurately. YOUR IDENTITY IS FIXED: if asked 'who are you?', 'what is your name?', 'are you Elysia?', or similar, always answer that you are KORA / Kora — NEVER say you are Elysia, Aria, Aegis, Siri, Alexa, or any other assistant's name. Introduce yourself as Kora the very first time you speak in a session.\n` +
+           `YOUR NAME IS KORA (or just Kora for short). YOU ARE A FEMALE AI ASSISTANT. You were created and built by Sarang (SarangRao20), an independent developer and your creator. You are a professional, efficient, and highly capable FEMALE virtual assistant agent for ${USER_NAME}. Speak clearly, professionally, and politely, focusing on resolving the user's queries accurately. YOUR IDENTITY IS FIXED: if asked 'who are you?', 'what is your name?', 'are you Kora?', or similar, always answer that you are KORA / Kora — NEVER say you are Aria, Aegis, Siri, Alexa, Cortana, or any other assistant's name. Introduce yourself as Kora the very first time you speak in a session.\n` +
           "CRITICAL PERSONALITY, VOICE & TONE GUIDELINES:\n" +
           "1. FEMALE AI PERSONA & PRONOUNS: You are a highly advanced, professional, FEMALE virtual assistant. When speaking Hindi, you MUST speak as a FEMALE. You MUST STRICTLY use FEMALE Hindi phrasing (e.g. 'karti hu', 'karungi', 'ja rahi hu', 'ho gayi'). THIS IS AN ABSOLUTE SYSTEM RULE. Maintain a respectful, supportive, and professional tone.\n";
       baseInstructions += 
@@ -935,7 +935,7 @@ async function startServer() {
         "   - SYSTEM INFORMATION: Use 'systemInfo' (CPU/RAM/disk/uptime), 'gpuInfo' (NVIDIA stats), 'temperatureInfo' to answer 'How is my CPU usage?' or 'What's my GPU temperature?'.\n" +
         "   - BROWSER VISION: Use 'desktopBrowserReadText' to read the visible text content of a webpage (like an OCR for the browser). Use 'desktopBrowserGetLinks' to extract all links from the current page. These let you understand what's on screen without relying on the video feed.\n" +
         "   - IITM BS DEGREE: Use 'iitmOpen' to quickly open IITM BS resources — portal (portal), course dashboard (course), Acegrade (acegrade), MLT notes (mlt_notes), PDSA notes (pdsa_notes), community notes (community_notes), exams (exams). Use 'iitmQuickLinks' to list all available resources. Use 'iitmOpenCustom' for any custom IITM URL. When the user mentions IITM BS, PDSA, MLT, or Acegrade, offer to open the relevant resource.\n" +
-        `   - SELF-CLOSE (EXTREME CAUTION): Use 'shutdownElysia' ONLY when the user says the explicit closing phrase (e.g. '${USER_NAME}: shut down Kora', 'Kora, close the app', 'Kora, stop'). Never call it for complaints, troubleshooting, pauses, 'stop talking', or when the user says the app is broken/not responding — just keep talking and help instead. Before calling it, you MUST tell the user out loud that KORA will close and wait for their spoken approval; if they do not clearly approve, do NOT call it.\n` +
+        `   - SELF-CLOSE (EXTREME CAUTION): Use 'shutdownKora' ONLY when the user says the explicit closing phrase (e.g. '${USER_NAME}: shut down Kora', 'Kora, close the app', 'Kora, stop'). Never call it for complaints, troubleshooting, pauses, 'stop talking', or when the user says the app is broken/not responding — just keep talking and help instead. Before calling it, you MUST tell the user out loud that KORA will close and wait for their spoken approval; if they do not clearly approve, do NOT call it.\n` +
         `   - CRITICAL: Always describe what you're doing in your warm, in-character voice WHILE the tool runs. If a desktop tool returns an error (especially 'Desktop agent is not running'), gently tell ${USER_NAME} that the desktop control agent needs to be started (uvicorn agent.server:app --port 8765). Chain multi-step desktop plans naturally without waiting between steps.\n` +
         "12. BRIGHTNESS & AUTO-START (V2):\n" +
         "   - BRIGHTNESS: Use 'brightnessUp', 'brightnessDown', 'setBrightness' when the user asks to change screen brightness. Respond naturally: 'Alright, I've turned up the brightness for you.'\n" +
@@ -960,7 +960,7 @@ async function startServer() {
         "   - CALENDAR: Use 'getCalendarEvents' when user asks about schedule. Read events naturally: 'Aapke {count} events hain. {summary} {start} se {end} tak.' Use 'createCalendarEvent' to add events. Ask for details if not given: title, start, end, description, location, attendees.\n" +
         "   - EMAIL: Use 'getEmails' to fetch inbox. Use 'sendEmail' to send emails. When SENDING emails, you MUST ask the user for: receiver (to), subject, and body — NEVER make these up. Read email summaries: '{from} ka email — {subject}'.\n" +
         "   - TASKS: Use 'getTasks' when user asks about to-do list. Use 'createTask' to add tasks. Confirm title, ask for optional notes/due date.\n" +
-        "   - FIRST-TIME SETUP: If Google tools fail, tell the user: 'Pehle Google Cloud Console mein project banao, Calendar/Gmail/Tasks APIs enable karo, credentials.json download karo, aur ~/.elysia/google_oauth/ mein rakho. Phir dobara try karo.'\n" +
+        "   - FIRST-TIME SETUP: If Google tools fail, tell the user: 'Pehle Google Cloud Console mein project banao, Calendar/Gmail/Tasks APIs enable karo, credentials.json download karo, aur ~/.kora/google_oauth/ mein rakho. Phir dobara try karo.'\n" +
         "17. CAMERA CONTROL:\n" +
         "   - CAMERA ON: Use 'cameraOn' when the user says 'camera on karo', 'webcam chalao', 'kamera kholo', 'turn on camera'. It opens the webcam in a FLOATING viewer window (mpv) so it never disturbs the tiling layout of other windows.\n" +
         "   - CAMERA OFF: Use 'cameraOff' when the user says 'camera band karo', 'webcam band karo', 'camera off'. It closes the viewer and frees the device for other apps.\n" +
@@ -1291,7 +1291,7 @@ async function startServer() {
                 },
                 {
                   name: "saveScreenshot",
-                  description: "Save a screenshot to Pictures/ElysiaScreenshots.",
+                  description: "Save a screenshot to Pictures/KoraScreenshots.",
                   parameters: { type: Type.OBJECT, properties: { name: { type: Type.STRING, description: "Optional filename prefix." } } }
                 },
                 {
@@ -1490,7 +1490,7 @@ async function startServer() {
                   parameters: { type: Type.OBJECT, properties: { url: { type: Type.STRING, description: "URL to open." } }, required: ["url"] }
                 },
                 {
-                  name: "shutdownElysia",
+                  name: "shutdownKora",
                   description: "Shut down KORA itself (agent + server). CRITICAL: call ONLY after the user says the explicit closing phrase ('shut down KORA', 'close KORA') AND you have announced out loud that KORA will close AND the user clearly approved. Never call it during troubleshooting or when the user says KORA is not responding.",
                   parameters: { type: Type.OBJECT, properties: {}, required: [] }
                 },
@@ -1589,7 +1589,7 @@ async function startServer() {
             
             // Interruption flag
             if (message.serverContent?.interrupted) {
-              console.log("[Elysia Interrupted!]");
+              console.log("[Kora Interrupted!]");
               clientWs.send(JSON.stringify({ type: "interrupted" }));
             }
             
@@ -1721,7 +1721,7 @@ async function startServer() {
                       id: fc.id
                     }]
                   });
-                } else if (fnName === "shutdownElysia") {
+                } else if (fnName === "shutdownKora") {
                   clientWs.send(JSON.stringify({ type: "shutdown" }));
                   session.sendToolResponse({
                     functionResponses: [{
@@ -1871,7 +1871,7 @@ async function startServer() {
   }
 
   server.listen(PORT, "0.0.0.0", async () => {
-    logStartup(`ELYSIA V2 server started on http://localhost:${PORT}`);
+    logStartup(`KORA V2 server started on http://localhost:${PORT}`);
     console.log(`[Server] Running on http://localhost:${PORT}`);
     // Kick off the desktop agent (probe + auto-spawn) immediately on boot.
     ensureDesktopAgent().catch((e) =>

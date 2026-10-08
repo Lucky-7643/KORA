@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { LiveState, ElysiaAudioSession } from "./lib/audio";
-import { ElysiaCoreVisualizer, type ElysiaEmotion } from "./components/ElysiaCoreVisualizer";
-import { type ElysiaSettings, saveSettings, loadSettings } from "./lib/settingsStore";
+import { LiveState, KoraAudioSession } from "./lib/audio";
+import { KoraCoreVisualizer, type KoraEmotion } from "./components/KoraCoreVisualizer";
+import { type KoraSettings, saveSettings, loadSettings } from "./lib/settingsStore";
 import type { Memory, MemoryCategory } from "./lib/memoryTypes";
-import { ElysiaWakeWordDetector } from "./lib/wakeWord";
+import { KoraWakeWordDetector } from "./lib/wakeWord";
 import { BrowserAgent } from "./components/BrowserAgent";
 import { MemoryDashboard } from "./components/MemoryDashboard";
 import { TranscriptPanel } from "./components/TranscriptPanel";
@@ -31,7 +31,7 @@ import {
 } from "lucide-react";
 
 export default function App() {
-  const [settings, setSettings] = useState<ElysiaSettings>(loadSettings());
+  const [settings, setSettings] = useState<KoraSettings>(loadSettings());
   const [state, setState] = useState<LiveState>("disconnected");
 
   // Real-time Screen Sharing states
@@ -226,12 +226,12 @@ export default function App() {
     await startScreenSharing();
   };
 
-  const [activeEmotion, setActiveEmotion] = useState<ElysiaEmotion>("idle");
+  const [activeEmotion, setActiveEmotion] = useState<KoraEmotion>("idle");
   const [themeColor, setThemeColor] = useState<string>("charcoal");
   const [userCaption, setUserCaption] = useState<string>("");
   const [characterState, setCharacterState] = useState<"idle" | "thinking" | "talking">("idle");
 
-  const detectEmotionFromText = (text: string): ElysiaEmotion => {
+  const detectEmotionFromText = (text: string): KoraEmotion => {
     const lower = text.toLowerCase();
     if (lower.includes("haha") || lower.includes("lol") || lower.includes("funny") || lower.includes("joke") || lower.includes("hehe") || lower.includes("wink")) return "playful";
     if (lower.includes("happy") || lower.includes("harmony") || lower.includes("glad") || lower.includes("joy") || lower.includes("wonderful") || lower.includes("love") || lower.includes("smile")) return "happy";
@@ -250,7 +250,7 @@ export default function App() {
   const [showGuide, setShowGuide] = useState<boolean>(false);
   const [errorText, setErrorText] = useState<string | null>(null);
 
-  // Elysia Autopilot system controller state
+  // Kora Autopilot system controller state
   const [browserTrigger, setBrowserTrigger] = useState<{
     type: string;
     args: any;
@@ -258,7 +258,7 @@ export default function App() {
     callback: (res: any) => void;
   } | null>(null);
 
-  // Elysia recollections database core state
+  // Kora recollections database core state
   const [memories, setMemories] = useState<Memory[]>([]);
   const [showMemoryDashboard, setShowMemoryDashboard] = useState<boolean>(false);
 
@@ -274,14 +274,14 @@ export default function App() {
   useEffect(() => { showSettingsRef.current = showSettings; }, [showSettings]);
 
   // V2: Wake word detector instance (Web Speech API, lives for the app lifetime)
-  const wakeDetectorRef = useRef<ElysiaWakeWordDetector | null>(null);
+  const wakeDetectorRef = useRef<KoraWakeWordDetector | null>(null);
   // Ref indirection so the wake-word callback always calls the latest connect
   // handler, regardless of where it's declared in the component body.
   const connectHandlerRef = useRef<() => void>(() => {});
 
   // Initialize wake detector once on mount.
   useEffect(() => {
-    const det = new ElysiaWakeWordDetector();
+    const det = new KoraWakeWordDetector();
     wakeDetectorRef.current = det;
     return () => {
       det.stop();
@@ -297,7 +297,7 @@ export default function App() {
         phrase: settings.wakePhrase,
         sensitivity: settings.sensitivity,
         onTriggered: () => {
-          // When wake word fires, stop detector and connect ELYSIA.
+          // When wake word fires, stop detector and connect KORA.
           det.stop();
           connectHandlerRef.current();
         },
@@ -308,12 +308,12 @@ export default function App() {
   }, [settings.wakeWordEnabled, settings.wakePhrase, settings.sensitivity, state]);
 
   // Handle settings changes: persist to localStorage + update state.
-  const handleSettingsChange = (patch: Partial<ElysiaSettings>) => {
+  const handleSettingsChange = (patch: Partial<KoraSettings>) => {
     const next = saveSettings(patch);
     setSettings(next);
   };
 
-  const sessionRef = useRef<ElysiaAudioSession | null>(null);
+  const sessionRef = useRef<KoraAudioSession | null>(null);
 
   // Fetch initial recollections from backend database
   useEffect(() => {
@@ -359,7 +359,7 @@ export default function App() {
 
   // Initialize the audio session handlers once on mount
   useEffect(() => {
-    sessionRef.current = new ElysiaAudioSession({
+    sessionRef.current = new KoraAudioSession({
       onStateChange: (newState) => {
         setState(newState);
         if (newState === "disconnected") {
@@ -511,15 +511,15 @@ export default function App() {
 
   return (
     <div
-      id="elysia-holographic-desktop"
+      id="kora-holographic-desktop"
       className={`relative w-full h-screen overflow-hidden bg-[#020205] text-white bg-gradient-to-br ${getAmbientStyles()} theme-transition flex flex-col justify-between p-6 sm:p-10 select-none`}
     >
       {/* Decorative cinematic dust/stars (subtle) */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] z-0 mix-blend-screen" />
 
-      {/* FULL VIEWPORT HOLOGRAPHIC STAGE: Elysia materializes across the entire screen */}
+      {/* FULL VIEWPORT HOLOGRAPHIC STAGE: Kora materializes across the entire screen */}
       <div className="absolute inset-0 z-0 pointer-events-auto select-none">
-        <ElysiaCoreVisualizer
+        <KoraCoreVisualizer
           session={sessionRef.current}
           state={state}
           themeColor={themeColor}

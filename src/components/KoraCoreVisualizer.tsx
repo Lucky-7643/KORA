@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from "react";
-import { ElysiaAudioSession, LiveState } from "../lib/audio";
+import { KoraAudioSession, LiveState } from "../lib/audio";
 import { GoldenHolographicCore } from "./GoldenHolographicCore";
 
-export type ElysiaEmotion =
+export type KoraEmotion =
   | "idle"
   | "happy"
   | "excited"
@@ -15,17 +15,17 @@ export type ElysiaEmotion =
   | "embarrassed"
   | "playful";
 
-interface ElysiaCoreVisualizerProps {
-  session: ElysiaAudioSession | null;
+interface KoraCoreVisualizerProps {
+  session: KoraAudioSession | null;
   state: LiveState;
   themeColor: string; // Violet, crimson, emerald, celestial, gold, rose, charcoal
-  activeEmotion?: ElysiaEmotion;
+  activeEmotion?: KoraEmotion;
   characterState: "idle" | "thinking" | "talking";
   backgroundVideo?: string;
   avatarStyle: "character" | "orb";
 }
 
-export const ElysiaCoreVisualizer: React.FC<ElysiaCoreVisualizerProps> = ({
+export const KoraCoreVisualizer: React.FC<KoraCoreVisualizerProps> = ({
   session,
   state,
   themeColor,
@@ -45,7 +45,7 @@ export const ElysiaCoreVisualizer: React.FC<ElysiaCoreVisualizerProps> = ({
   const speechVolumeRef = useRef<number>(0);
   const glowRingRef = useRef<number>(0);
   const emotionFlashRef = useRef<number>(0);
-  const lastEmotionRef = useRef<ElysiaEmotion>(activeEmotion);
+  const lastEmotionRef = useRef<KoraEmotion>(activeEmotion);
 
   // Floating sci-fi background particle arrays
   const particlesRef = useRef<Array<{
@@ -324,14 +324,14 @@ export const ElysiaCoreVisualizer: React.FC<ElysiaCoreVisualizerProps> = ({
 
       {/* Canvas holographic effects behind video */}
       <canvas
-        id="elysia-hologram-living-canvas"
+        id="kora-hologram-living-canvas"
         ref={canvasRef}
         className="absolute inset-0 w-full h-full pointer-events-none z-[6]"
       />
 
       {/* 2. Golden Holographic Core / Avatar Presence (Z-index 10) */}
       <div
-        id="elysia-animated-presence"
+        id="kora-animated-presence"
         className="absolute inset-0 z-10 w-full h-full flex items-center justify-center pointer-events-none [transform:translateZ(0)]"
       >
         <div className="absolute inset-0 w-full h-full select-none pointer-events-auto">

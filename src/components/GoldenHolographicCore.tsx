@@ -1,13 +1,13 @@
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { ElysiaAudioSession, LiveState } from "../lib/audio";
-import { type ElysiaEmotion } from "./ElysiaCoreVisualizer";
+import { KoraAudioSession, LiveState } from "../lib/audio";
+import { type KoraEmotion } from "./KoraCoreVisualizer";
 
 interface GoldenHolographicCoreProps {
-  session: ElysiaAudioSession | null;
+  session: KoraAudioSession | null;
   state: LiveState;
   characterState: "idle" | "thinking" | "talking";
-  activeEmotion?: ElysiaEmotion;
+  activeEmotion?: KoraEmotion;
 }
 
 /**

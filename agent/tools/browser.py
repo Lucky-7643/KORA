@@ -4,7 +4,7 @@ Browser automation via Playwright.
 Modes:
   - managed (default): launches its own headed Chromium instance
   - cdp: connects to an existing Chrome via --remote-debugging-port=9222
-         (set ELYSIA_BROWSER_MODE=cdp to enable)
+         (set KORA_BROWSER_MODE=cdp to enable)
 
 Capabilities: open/navigate, new/close tabs, search, click, type, fill forms,
 back/forward, scroll. Lazy-initialized; robust to closed pages.
@@ -34,7 +34,7 @@ from playwright._impl._errors import TimeoutError as PlaywrightTimeoutError
 
 from ..registry import STATE, ToolError, register
 
-log = logging.getLogger("elysia.tools.browser")
+log = logging.getLogger("kora.tools.browser")
 
 # A dedicated event loop + thread runs all Playwright coroutines, because
 # Playwright's sync API can deadlock under FastAPI's threadpool. We use the
@@ -82,8 +82,8 @@ def _run(coro):
 
 
 def _browser_mode() -> str:
-    """Return 'cdp' or 'managed' based on ELYSIA_BROWSER_MODE env var."""
-    return os.environ.get("ELYSIA_BROWSER_MODE", "managed").strip().lower()
+    """Return 'cdp' or 'managed' based on KORA_BROWSER_MODE env var."""
+    return os.environ.get("KORA_BROWSER_MODE", "managed").strip().lower()
 
 
 async def _ensure_browser_cdp_async() -> Page:
@@ -111,10 +111,10 @@ async def _ensure_browser_cdp_async() -> Page:
         from playwright.async_api import async_playwright
         STATE.playwright = await async_playwright().start()
 
-    cdp_url = os.environ.get("ELYSIA_CDP_URL", "http://127.0.0.1:9222")
+    cdp_url = os.environ.get("KORA_CDP_URL", "http://127.0.0.1:9222")
     if getattr(STATE, "browser", None) is None:
         import logging
-        log = logging.getLogger("elysia.desktop")
+        log = logging.getLogger("kora.desktop")
         try:
             STATE.browser = await STATE.playwright.chromium.connect_over_cdp(cdp_url)
         except Exception as e:
@@ -136,7 +136,7 @@ async def _ensure_browser_cdp_async() -> Page:
                 import subprocess as _sp
                 # Use a temp user-data-dir so Chrome launches a fresh instance
                 # (otherwise an already-running Chrome reuses its own profile and ignores the debug port)
-                _tmpdir = os.path.join(_tempfile.gettempdir(), f"elysia-cdp-{_uuid.uuid4().hex[:8]}")
+                _tmpdir = os.path.join(_tempfile.gettempdir(), f"kora-cdp-{_uuid.uuid4().hex[:8]}")
                 _sp.Popen(
                     [chrome_exe, f"--user-data-dir={_tmpdir}", "--remote-debugging-port=9222", "--no-first-run"],
                     close_fds=True if _sys.platform != "win32" else False,
@@ -180,7 +180,7 @@ async def _ensure_browser_cdp_async() -> Page:
 
 
 def _kill_stale_browser_processes(user_data_dir: str) -> None:
-    """Kill leftover Chromium processes still holding ELYSIA's profile dir.
+    """Kill leftover Chromium processes still holding KORA's profile dir.
 
     Only processes launched with our own --user-data-dir are touched, so the
     user's regular Chrome is never affected.
@@ -227,7 +227,7 @@ async def _ensure_browser_managed_async(_retry: bool = True) -> Any:
         STATE.playwright = await async_playwright().start()
 
     if getattr(STATE, "context", None) is None:
-        user_data_dir = os.path.join(os.path.expanduser("~"), ".elysia_browser_data")
+        user_data_dir = os.path.join(os.path.expanduser("~"), ".kora_browser_data")
         import shutil as _shutil
         _chrome_channel = "chrome" if _shutil.which("google-chrome-stable") else None
 
@@ -257,9 +257,9 @@ async def _ensure_browser_managed_async(_retry: bool = True) -> Any:
         try:
             STATE.context = await _launch_persistent()
         except Exception as exc:
-            # A previous Chromium still holds ~/.elysia_browser_data, so Chrome
+            # A previous Chromium still holds ~/.kora_browser_data, so Chrome
             # answers "Opening in existing browser session" and exits. Kill the
-            # leftovers (they belong to ELYSIA's own profile) and retry once.
+            # leftovers (they belong to KORA's own profile) and retry once.
             msg = str(exc).lower()
             if "existing browser session" not in msg and "processsingleton" not in msg:
                 raise
@@ -664,7 +664,7 @@ async def browser_set_mode(args: Dict[str, Any]) -> Dict[str, Any]:
     mode = (args.get("mode") or "cdp").strip().lower()
     if mode not in ["cdp", "managed"]:
         raise ToolError("Invalid mode. Use 'cdp' or 'managed'.")
-    os.environ["ELYSIA_BROWSER_MODE"] = mode
+    os.environ["KORA_BROWSER_MODE"] = mode
 
     if STATE.browser:
         try:

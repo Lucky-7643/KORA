@@ -1,7 +1,7 @@
 /**
- * ELYSIA Settings Store — persistent user preferences (V2).
+ * KORA Settings Store — persistent user preferences (V2).
  *
- * Establishes the persistence pattern for ELYSIA: settings are mirrored to
+ * Establishes the persistence pattern for KORA: settings are mirrored to
  * localStorage (instant local read) AND synced to the backend (settings.json)
  * so auto-start / wake-word preferences survive across browsers and the
  * Python desktop agent can read them too.
@@ -10,12 +10,12 @@
  * No Context/Zustand — this is deliberately lightweight to match audio.ts/memoryTypes.ts.
  */
 
-export interface ElysiaSettings {
-  /** Launch ELYSIA (backends + browser tab) silently on Windows login. */
+export interface KoraSettings {
+  /** Launch KORA (backends + browser tab) silently on Windows login. */
   autoStart: boolean;
   /** Enable the always-listening wake-word detector. */
   wakeWordEnabled: boolean;
-  /** Phrase that activates ELYSIA (case-insensitive substring match). */
+  /** Phrase that activates KORA (case-insensitive substring match). */
   wakePhrase: string;
   /** Preferred microphone device id ("" = system default). */
   micDeviceId: string;
@@ -41,7 +41,7 @@ export const GEMINI_VOICES = [
   { id: "Zephyr", label: "Zephyr", desc: "Light and breezy" },
 ] as const;
 
-export const DEFAULT_SETTINGS: ElysiaSettings = {
+export const DEFAULT_SETTINGS: KoraSettings = {
   autoStart: false,
   wakeWordEnabled: false,
   wakePhrase: "hey kora",
@@ -55,25 +55,25 @@ export const DEFAULT_SETTINGS: ElysiaSettings = {
   avatarStyle: "character",
 };
 
-const STORAGE_KEY = "elysia.settings.v2";
+const STORAGE_KEY = "kora.settings.v2";
 
 /** Settings keys that the browser should never persist (security). */
-const NEVER_PERSIST: ReadonlySet<keyof ElysiaSettings> = new Set([]);
+const NEVER_PERSIST: ReadonlySet<keyof KoraSettings> = new Set([]);
 
 /**
  * Load settings from localStorage, merged over defaults so new keys always
  * have a sane value even when an older payload is present.
  */
-export function loadSettings(): ElysiaSettings {
+export function loadSettings(): KoraSettings {
   if (typeof window === "undefined") return { ...DEFAULT_SETTINGS };
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return { ...DEFAULT_SETTINGS };
-    const parsed = JSON.parse(raw) as Partial<ElysiaSettings>;
-    const merged: ElysiaSettings = { ...DEFAULT_SETTINGS, ...parsed };
-    // Rename migration: the assistant used to be called ELYSIA, now KORA.
+    const parsed = JSON.parse(raw) as Partial<KoraSettings>;
+    const merged: KoraSettings = { ...DEFAULT_SETTINGS, ...parsed };
+    // Rename migration: the assistant used to be called KORA, now KORA.
     // Any stored wake phrase that still mentions the old name is upgraded.
-    if (typeof merged.wakePhrase === "string" && merged.wakePhrase.toLowerCase().includes("elysia")) {
+    if (typeof merged.wakePhrase === "string" && merged.wakePhrase.toLowerCase().includes("kora")) {
       merged.wakePhrase = DEFAULT_SETTINGS.wakePhrase;
     }
     // Voice migration: the old default "Charon" is a deep MALE voice — the
@@ -95,14 +95,14 @@ export function loadSettings(): ElysiaSettings {
  * Persist a full or partial settings update to localStorage.
  * Returns the fully merged settings object.
  */
-export function saveSettings(patch: Partial<ElysiaSettings>): ElysiaSettings {
+export function saveSettings(patch: Partial<KoraSettings>): KoraSettings {
   const current = loadSettings();
-  const next: ElysiaSettings = { ...current, ...patch };
+  const next: KoraSettings = { ...current, ...patch };
   if (typeof window !== "undefined") {
     try {
       // Strip any sensitive keys before writing to localStorage.
       const safe: Record<string, unknown> = {};
-      (Object.keys(next) as (keyof ElysiaSettings)[]).forEach((k) => {
+      (Object.keys(next) as (keyof KoraSettings)[]).forEach((k) => {
         if (!NEVER_PERSIST.has(k)) safe[k] = next[k];
       });
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(safe));
@@ -116,7 +116,7 @@ export function saveSettings(patch: Partial<ElysiaSettings>): ElysiaSettings {
 }
 
 /** Push settings to the backend (src/server/index.ts persists to settings.json). */
-async function syncSettingsToBackend(settings: ElysiaSettings): Promise<void> {
+async function syncSettingsToBackend(settings: KoraSettings): Promise<void> {
   try {
     await fetch("/api/settings", {
       method: "POST",

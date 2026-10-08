@@ -1,9 +1,9 @@
 """
-Windows auto-start management for ELYSIA (V2).
+Windows auto-start management for KORA (V2).
 
 Manages a single registry entry under
-    HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\Elysia
-which points at the silent launcher batch file (start-elysia-silent.bat) located
+    HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\Kora
+which points at the silent launcher batch file (start-kora-silent.bat) located
 in the project root. HKCU is used (no admin rights required) and the change is
 per-user.
 
@@ -25,8 +25,8 @@ from typing import Any, Dict
 from ..registry import ToolError, register
 
 RUN_KEY_PATH = r"Software\\Microsoft\\Windows\\CurrentVersion\\Run"
-VALUE_NAME = "Elysia"
-SILENT_LAUNCHER = "start-elysia-silent.bat"
+VALUE_NAME = "Kora"
+SILENT_LAUNCHER = "start-kora-silent.bat"
 
 
 def _project_root() -> str:
@@ -41,7 +41,7 @@ def _launcher_path() -> str:
 
 def _ensure_launcher_exists() -> str:
     """
-    Make sure start-elysia-silent.bat exists in the project root.
+    Make sure start-kora-silent.bat exists in the project root.
     If missing, write a minimal silent launcher so auto-start never breaks.
     """
     path = _launcher_path()

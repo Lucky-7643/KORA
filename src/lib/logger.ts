@@ -1,5 +1,5 @@
 /**
- * Development-only logger utility for ELYSIA.
+ * Development-only logger utility for KORA.
  * Wraps console methods to only log in development mode, keeping production clean.
  * Supports prefixed logging with context-aware colors and formatting.
  */

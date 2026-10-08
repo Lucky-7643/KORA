@@ -1,6 +1,6 @@
 /**
- * Elysia Playwright Local Agent Server
- * Run this locally on your machine to grant Elysia real control over your browser!
+ * Kora Playwright Local Agent Server
+ * Run this locally on your machine to grant Kora real control over your browser!
  * 
  * Setup instructions:
  * 1. Make sure you have Node.js installed.
@@ -9,7 +9,7 @@
  * 4. Run: npx playwright install chromium
  * 5. Launch the server: node local-agent.js
  * 
- * This server binds to port 3001 on localhost, permitting Elysia's web portal to issue
+ * This server binds to port 3001 on localhost, permitting Kora's web portal to issue
  * real-time Playwright actions directly on your physical computer.
  */
 
@@ -315,7 +315,7 @@ app.post("/api/action", async (req, res) => {
       }
 
       default:
-        throw new Error(`Directive '${type}' not recognized by Elysia's local Playwright engine.`);
+        throw new Error(`Directive '${type}' not recognized by Kora's local Playwright engine.`);
     }
 
   } catch (err) {
@@ -327,7 +327,7 @@ app.post("/api/action", async (req, res) => {
 // Start Express server
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`\n======================================================`);
-  console.log(`🚀 Elysia Playwright Local Agent Server Running!`);
+  console.log(`🚀 Kora Playwright Local Agent Server Running!`);
   console.log(`📡 Listening on: http://localhost:${PORT}`);
   console.log(`======================================================\n`);
 });

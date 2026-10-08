@@ -1,8 +1,8 @@
 # PRD - Project Requirements Document
 
 ## 1. Project Overview
-**Name:** Elysia AI
-**Description:** An omnipresent, highly interactive, and expressive AI desktop assistant designed to provide an immersive, human-like pair-programming and OS-management experience. Elysia integrates seamlessly into the user's workflow with deep OS-level capabilities.
+**Name:** Kora AI
+**Description:** An omnipresent, highly interactive, and expressive AI desktop assistant designed to provide an immersive, human-like pair-programming and OS-management experience. Kora integrates seamlessly into the user's workflow with deep OS-level capabilities.
 
 ## 2. Target Audience
 - Developers and power users operating on Linux (specifically Arch/Hyprland) and Windows.

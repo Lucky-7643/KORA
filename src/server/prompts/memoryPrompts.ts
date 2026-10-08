@@ -1,5 +1,5 @@
 /**
- * Memory system prompts for ELYSIA.
+ * Memory system prompts for KORA.
  * Instructs the AI on how to use and interact with persistent user memory.
  */
 

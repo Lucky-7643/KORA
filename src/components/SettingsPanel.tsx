@@ -12,15 +12,15 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  ElysiaSettings,
+  KoraSettings,
   GEMINI_VOICES,
 } from "../lib/settingsStore";
 
 interface SettingsPanelProps {
   isOpen: boolean;
   onClose: () => void;
-  settings: ElysiaSettings;
-  onChange: (patch: Partial<ElysiaSettings>) => void;
+  settings: KoraSettings;
+  onChange: (patch: Partial<KoraSettings>) => void;
   themeColor: string;
   onVoiceChange?: (voice: string) => void;
 }

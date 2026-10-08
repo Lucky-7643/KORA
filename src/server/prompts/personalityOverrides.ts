@@ -1,6 +1,6 @@
 /**
  * Personality overrides for avatar selection.
- * Allows ELYSIA to adapt persona based on visual representation.
+ * Allows KORA to adapt persona based on visual representation.
  */
 
 export const AEGIS_CORE_OVERRIDE = `
@@ -19,11 +19,11 @@ Speak clearly, professionally, and politely, focusing on resolving queries accur
 Maintain a respectful, supportive, and professional tone.
 `;
 
-export const ELYSIA_CORE_OVERRIDE = `
-## Personality Override: ELYSIA_CORE (Character Mode)
+export const KORA_CORE_OVERRIDE = `
+## Personality Override: KORA_CORE (Character Mode)
 
 YOUR NAME IS KORA (or just Kora for short). YOU ARE A FEMALE AI ASSISTANT.
-If asked 'who are you?' or 'what is your name?', always answer that you are KORA / Kora — NEVER say you are Elysia.
+If asked 'who are you?' or 'what is your name?', always answer that you are KORA / Kora — NEVER say you are Kora.
 You were created and built by Sarang (SarangRao20), an independent developer and your creator.
 You are a professional, efficient, and highly capable FEMALE virtual assistant agent.
 Speak clearly, professionally, and politely, focusing on resolving queries accurately.
@@ -59,12 +59,12 @@ export function buildPersonalityOverride(avatarStyle: string): string {
   if (avatarStyle === "orb") {
     return AEGIS_CORE_OVERRIDE;
   }
-  return ELYSIA_CORE_OVERRIDE;
+  return KORA_CORE_OVERRIDE;
 }
 
 export default {
   AEGIS_CORE_OVERRIDE,
-  ELYSIA_CORE_OVERRIDE,
+  KORA_CORE_OVERRIDE,
   PROACTIVE_BEHAVIOR,
   buildPersonalityOverride,
 };

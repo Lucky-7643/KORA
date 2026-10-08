@@ -1,8 +1,8 @@
 """
-ELYSIA Desktop Control Agent — FastAPI entrypoint.
+KORA Desktop Control Agent — FastAPI entrypoint.
 
 Single dispatch endpoint POST /execute { tool, args } -> { result } | { error }.
-ELYSIA's Node bridge (`src/server/index.ts`) calls this over HTTP on 127.0.0.1:8765.
+KORA's Node bridge (`src/server/index.ts`) calls this over HTTP on 127.0.0.1:8765.
 
 Run:
     uvicorn agent.server:app --host 127.0.0.1 --port 8765
@@ -33,7 +33,7 @@ logging.basicConfig(
     format="[%(asctime)s] [%(levelname)s] %(message)s",
     datefmt="%H:%M:%S",
 )
-log = logging.getLogger("elysia.desktop")
+log = logging.getLogger("kora.desktop")
 
 
 load_all()
@@ -42,7 +42,7 @@ log.info("Loaded %d desktop tools: %s", len(TOOLS), ", ".join(sorted(TOOLS)))
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    log.info("ELYSIA Desktop Control Agent v%s starting up.", __version__)
+    log.info("KORA Desktop Control Agent v%s starting up.", __version__)
     yield
     try:
         from .tools.browser import shutdown_browser
@@ -50,13 +50,13 @@ async def lifespan(app: FastAPI):
         shutdown_browser()
     except Exception as e:
         log.warning("Browser shutdown error: %s", e)
-    log.info("ELYSIA Desktop Control Agent stopped.")
+    log.info("KORA Desktop Control Agent stopped.")
 
 
 app = FastAPI(
-    title="ELYSIA Desktop Control Agent",
+    title="KORA Desktop Control Agent",
     version=__version__,
-    description="JARVIS-style desktop automation backend for ELYSIA.",
+    description="JARVIS-style desktop automation backend for KORA.",
     lifespan=lifespan,
 )
 
@@ -118,8 +118,8 @@ async def execute(req: ExecuteRequest) -> ExecuteResponse:
 def main() -> None:
     import uvicorn
 
-    host = os.environ.get("ELYSIA_AGENT_HOST", "127.0.0.1")
-    port = int(os.environ.get("ELYSIA_AGENT_PORT", "8765"))
+    host = os.environ.get("KORA_AGENT_HOST", "127.0.0.1")
+    port = int(os.environ.get("KORA_AGENT_PORT", "8765"))
     log.info("Launching uvicorn on %s:%d", host, port)
     uvicorn.run(
         "agent.server:app",

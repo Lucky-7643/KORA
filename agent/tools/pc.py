@@ -240,8 +240,8 @@ def _cancel(args: Dict[str, Any]) -> Dict[str, Any]:
     return {"result": "Cancelled pending shutdown/restart timer."}
 
 
-@register("shutdownElysia")
-def shutdown_elysia(args: Dict[str, Any]) -> Dict[str, Any]:
+@register("shutdownKora")
+def shutdown_kora(args: Dict[str, Any]) -> Dict[str, Any]:
     import os
     import signal
     import sys
@@ -264,5 +264,5 @@ __all__ = [
     "request_power_action",
     "execute_power_action",
     "_cancel_power_timer",
-    "shutdown_elysia",
+    "shutdown_kora",
 ]

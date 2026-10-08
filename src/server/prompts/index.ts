@@ -12,7 +12,7 @@ import { buildPersonalityOverride, PROACTIVE_BEHAVIOR } from "./personalityOverr
 /**
  * Builds the complete system instruction string for Gemini Live.
  * 
- * @param avatarStyle - "orb" for AEGIS_CORE or "character" for ELYSIA_CORE
+ * @param avatarStyle - "orb" for AEGIS_CORE or "character" for KORA_CORE
  * @param memoryContext - Optional user memory/context to include
  * @returns Complete system instruction string ready for Gemini Live API
  */

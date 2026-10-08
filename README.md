@@ -1,10 +1,10 @@
-# ELYSIA — AI Voice Assistant with Holographic Interface
+# KORA — AI Voice Assistant with Holographic Interface
 
 <div align="center">
-  <video src="https://github.com/SarangRao20/Elysia-AI/raw/main/demo.mp4" controls="controls" muted="muted" autoplay="autoplay" width="100%"></video>
+  <video src="https://github.com/Lucky-7643/KORA/raw/main/demo.mp4" controls="controls" muted="muted" autoplay="autoplay" width="100%"></video>
 </div>
 
-A real-time, voice-to-voice holographic AI companion desktop assistant built on the **Google Gemini Live API**. ELYSIA combines a holographic video character, persistent memory, a reminder system, a full desktop automation agent, and an in-app browser — all running locally with a 3-process architecture.
+A real-time, voice-to-voice holographic AI companion desktop assistant built on the **Google Gemini Live API**. KORA combines a holographic video character, persistent memory, a reminder system, a full desktop automation agent, and an in-app browser — all running locally with a 3-process architecture.
 
 ---
 
@@ -42,11 +42,11 @@ A real-time, voice-to-voice holographic AI companion desktop assistant built on 
 
 | Architecture diagram | Anime‑girl frame |
 |----------------------|-----------------|
-| <img src="assets/chatgpt.png" alt="ELYSIA‑AI architecture" width="460"> | <img src="assets/frame.jpg" alt="Anime girl frame" width="460"> |
+| <img src="assets/chatgpt.png" alt="KORA‑AI architecture" width="460"> | <img src="assets/frame.jpg" alt="Anime girl frame" width="460"> |
 
 </div>
 
-ELYSIA runs as **3 separate processes** that communicate over HTTP/WebSocket:
+KORA runs as **3 separate processes** that communicate over HTTP/WebSocket:
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -85,7 +85,7 @@ ELYSIA runs as **3 separate processes** that communicate over HTTP/WebSocket:
 - **Vite** (build tool + dev server)
 - Google Fonts: Space Grotesk, Inter, JetBrains Mono
 - Canvas API — custom holographic visualizer with particle rings, plasma core, emotion glow
-- Web Speech API — wake word detection ("Hey Elysia")
+- Web Speech API — wake word detection ("Hey Kora")
 - Web Audio API — PCM audio encoding/decoding for Gemini Live (16-bit, 16kHz)
 - `getDisplayMedia` — screen sharing to Gemini
 
@@ -121,7 +121,7 @@ The Python agent has a backend abstraction layer for cross-platform support:
 ## Project Structure
 
 ```
-elysia-ai-assistant/
+kora-ai-assistant/
 ├── src/                       # Frontend and backend source
 │   ├── server/                # Node.js backend (Express + WebSocket + Gemini Live)
 │   │   ├── index.ts           # Main server entrypoint
@@ -135,7 +135,7 @@ elysia-ai-assistant/
 │   └── lib/                   # Utility functions and stores
 ├── agent/                     # Python OS-level agent (FastAPI)
 ├── run_agent.py               # Agent bootstrap (loads .env, starts uvicorn)
-├── start_elysia.sh            # Launch script (Python agent + Node server)
+├── start_kora.sh            # Launch script (Python agent + Node server)
 │
 ├── package.json
 ├── tsconfig.json
@@ -158,11 +158,11 @@ elysia-ai-assistant/
 │   │   ├── memoryTypes.ts     # Memory TypeScript interfaces
 │   │   ├── reminderTypes.ts   # Reminder TypeScript interfaces
 │   │   ├── settingsStore.ts   # Settings persistence (localStorage + server)
-│   │   └── wakeWord.ts        # "Hey Elysia" wake word detection via Web Speech API
+│   │   └── wakeWord.ts        # "Hey Kora" wake word detection via Web Speech API
 │   │
 │   └── components/
 │       ├── ApiKeyGate.tsx          # First-run API key onboarding overlay
-│       ├── ElysiaCoreVisualizer.tsx # Canvas-based holographic visualizer + video character
+│       ├── KoraCoreVisualizer.tsx # Canvas-based holographic visualizer + video character
 │       ├── BrowserAgent.tsx        # In-app browser with tabs, address bar, Playwright backend
 │       ├── MemoryDashboard.tsx     # Memory CRUD with category filtering
 │       ├── SettingsPanel.tsx       # General, Voice, System, About settings tabs
@@ -238,7 +238,7 @@ See [scripts/README.md](scripts/README.md) for entry point scripts documentation
 5. After each conversation turn, Gemini analyzes recent messages and extracts **memory transactions** (add/update/delete facts about the user)
 
 ### Wake Word Detection
-- Uses the Web Speech API to listen for "Hey Elysia"
+- Uses the Web Speech API to listen for "Hey Kora"
 - When detected, the visualizer transitions to listening state and captures speech
 
 ### Function Calling
@@ -262,7 +262,7 @@ See [scripts/README.md](scripts/README.md) for entry point scripts documentation
 
 ## Database / Persistence
 
-ELYSIA uses **no traditional database**. All data is stored as JSON files in the data directory (`~/.elysia/` by default, configurable via `ELYSIA_DATA_DIR`):
+KORA uses **no traditional database**. All data is stored as JSON files in the data directory (`~/.kora/` by default, configurable via `KORA_DATA_DIR`):
 
 | File | Purpose |
 |---|---|
@@ -288,7 +288,7 @@ After each conversation turn, Gemini analyzes a slice of recent messages and pro
 ### Reminder System
 - Timer-based using `setInterval` with configurable delay and optional repeat
 - Fires browser toast notifications with countdown
-- Injects a callback into the active Gemini session so ELYSIA can remind you verbally
+- Injects a callback into the active Gemini session so KORA can remind you verbally
 
 ---
 
@@ -298,11 +298,11 @@ After each conversation turn, Gemini analyzes a slice of recent messages and pro
 - Real-time bidirectional audio streaming via WebSocket
 - 16-bit PCM audio at 16kHz sample rate
 - Configurable voice (7 options): Aoede, Charon, Fenrir, Kore, Leda, Puck, Zephyr
-- System prompt establishes ELYSIA's personality and context
+- System prompt establishes KORA's personality and context
 
 ### Function Calling (Server-Side Tools)
 
-ELYSIA registers **~113 function declarations** with Gemini, spanning:
+KORA registers **~113 function declarations** with Gemini, spanning:
 
 | Category | Example Tools |
 |---|---|
@@ -337,7 +337,7 @@ The Python desktop agent runs on port 8765 and provides **91 tools** across 22 m
 | `iitm` | `iitmQuickLinks`, `iitmOpen`, `iitmOpenCustom` | IITM BS Degree portal shortcuts |
 | `news` | `getNews` | Fetch top headlines across 6 categories via Google News RSS |
 | `os_input` | `osType`, `osPress`, `osClick` | OS-level keyboard and mouse simulation |
-| `pc` | `volumeUp/Down`, `setVolume`, `brightnessUp/Down`, `setBrightness`, `muteToggle`, `executePowerAction`, `shutdownElysia` | System hardware controls |
+| `pc` | `volumeUp/Down`, `setVolume`, `brightnessUp/Down`, `setBrightness`, `muteToggle`, `executePowerAction`, `shutdownKora` | System hardware controls |
 | `screenshot` | `takeScreenshot`, `saveScreenshot`, `analyzeScreenshot`, `readScreen` | Screenshot capture + Tesseract OCR |
 | `search` | `searchWeb`, `searchYouTube`, `searchGoogle`, `searchGitHub` | Web search shortcuts |
 | `startup` | `enableAutoStart`, `disableAutoStart`, `getAutoStartStatus` | Auto-start on login (Windows registry) |
@@ -384,7 +384,7 @@ Switch at runtime with `desktopBrowserSetMode(mode: "cdp" | "managed")`.
 
 | Component | Description |
 |---|---|
-| `ElysiaCoreVisualizer` | Canvas-based holographic visualizer with particle rings, plasma core, emotion glow, mouse tracking. Renders the video character in idle/thinking/talking states. |
+| `KoraCoreVisualizer` | Canvas-based holographic visualizer with particle rings, plasma core, emotion glow, mouse tracking. Renders the video character in idle/thinking/talking states. |
 | `BrowserAgent` | Full in-app browser with tabs, address bar, search, powered by the Python Playwright backend |
 | `MemoryDashboard` | Memory management UI with category filtering, CRUD operations |
 | `SettingsPanel` | 4-tab settings: General, Voice, System, About. Voice selection, wake word config, theme picker, volume controls. |
@@ -398,7 +398,7 @@ Switch at runtime with `desktopBrowserSetMode(mode: "cdp" | "managed")`.
 ### Audio Pipeline
 - **Encoding**: `Float32Array` → `Int16Array` PCM at 16kHz
 - **Decoding**: Gemini response PCM → `AudioBuffer` → Web Audio API playback
-- **Wake Word**: Web Speech API continuous recognition, triggers on "Hey Elysia" detection
+- **Wake Word**: Web Speech API continuous recognition, triggers on "Hey Kora" detection
 
 ---
 
@@ -440,7 +440,7 @@ Keys stored in `secrets.json` in the data directory; only the backend reads them
 | Setting | Options | Default |
 |---|---|---|
 | `voice` | Aoede, Charon, Fenrir, Kore, Leda, Puck, Zephyr | Kore |
-| `wakeWord` | "Hey Elysia", custom string, or disabled | "Hey Elysia" |
+| `wakeWord` | "Hey Kora", custom string, or disabled | "Hey Kora" |
 | `sensitivity` | 0.1 - 1.0 | 0.5 |
 | `theme` | Violet, Crimson, Emerald, Celestial, Gold, Rose, Charcoal | Violet |
 | `userVolume` | 0 - 100 | 70 |
@@ -524,10 +524,10 @@ Quick reference:
 | `GEMINI_API_KEY` | Google Gemini API key (required) | — |
 | `PORT` | Node.js server port | `3000` |
 | `NODE_ENV` | Environment mode | `development` |
-| `ELYSIA_AGENT_HOST` | Python agent host | `127.0.0.1` |
-| `ELYSIA_AGENT_PORT` | Python agent port | `8765` |
-| `ELYSIA_DATA_DIR` | Data directory (logs, memories, settings) | `~/.elysia` |
-| `ELYSIA_BROWSER_MODE` | Browser mode: `managed` or `cdp` | `managed` |
+| `KORA_AGENT_HOST` | Python agent host | `127.0.0.1` |
+| `KORA_AGENT_PORT` | Python agent port | `8765` |
+| `KORA_DATA_DIR` | Data directory (logs, memories, settings) | `~/.kora` |
+| `KORA_BROWSER_MODE` | Browser mode: `managed` or `cdp` | `managed` |
 
 **For more environment variables, see [docs/CONFIG.md](docs/CONFIG.md).**
 
@@ -555,7 +555,7 @@ Designed and developed by **Sarang (SarangRao20)** — an independent developer 
 - Cross-platform desktop agent with 93 tools across 22 modules
 - Dual browser automation (CDP + managed modes)
 - In-app Playwright browser with media controls
-- Wake word detection ("Hey Elysia")
+- Wake word detection ("Hey Kora")
 - Screen sharing to Gemini
 - Toast notification system
 - Two-step confirmation dialogs for dangerous actions (terminal + power)

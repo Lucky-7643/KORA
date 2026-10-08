@@ -1,9 +1,9 @@
 /**
- * ELYSIA Wake Word Detector (V2).
+ * KORA Wake Word Detector (V2).
  *
  * Uses the browser-native Web Speech API (webkitSpeechRecognition) for
  * continuous, always-listening keyword detection. Zero dependencies, runs
- * entirely in the ELYSIA browser tab.
+ * entirely in the KORA browser tab.
  *
  * Design goals (per V2 spec):
  *   - Very low CPU: relies on the browser's native speech engine (no FFT loop).
@@ -13,9 +13,9 @@
  *   - Activation sound + state callback on detection.
  *
  * Public API:
- *   const det = new ElysiaWakeWordDetector();
+ *   const det = new KoraWakeWordDetector();
  *   det.start({ phrase, sensitivity, onTriggered, onState });
- *   det.setPhrase("hey elysia");
+ *   det.setPhrase("hey kora");
  *   det.setSensitivity(60);
  *   det.stop();
  */
@@ -59,10 +59,10 @@ export interface WakeWordOptions {
   onState?: (state: WakeWordState) => void;
 }
 
-export class ElysiaWakeWordDetector {
+export class KoraWakeWordDetector {
   private recognition: SpeechRecognitionLike | null = null;
   private ctor: SpeechRecognitionCtor | null;
-  private phrase = "hey elysia";
+  private phrase = "hey kora";
   private sensitivity = 60;
   private onTriggered: (() => void) | null = null;
   private onState: ((s: WakeWordState) => void) | null = null;
@@ -94,7 +94,7 @@ export class ElysiaWakeWordDetector {
       this.setState("error");
       return false;
     }
-    this.phrase = (opts.phrase || "hey elysia").toLowerCase().trim();
+    this.phrase = (opts.phrase || "hey kora").toLowerCase().trim();
     this.sensitivity = opts.sensitivity ?? this.sensitivity;
     this.onTriggered = opts.onTriggered ?? null;
     this.onState = opts.onState ?? null;
@@ -119,7 +119,7 @@ export class ElysiaWakeWordDetector {
 
   /** Change the wake phrase live without a full restart. */
   setPhrase(phrase: string): void {
-    this.phrase = (phrase || "hey elysia").toLowerCase().trim();
+    this.phrase = (phrase || "hey kora").toLowerCase().trim();
   }
 
   /** Change sensitivity live. */

@@ -31,7 +31,7 @@ Created modular prompt system in `src/server/prompts/`:
 - `avatarPrompts.ts` - Personality and emotional response
 - `toolUsage.ts` - Tool documentation and guidelines  
 - `memoryPrompts.ts` - Memory system instructions
-- `personalityOverrides.ts` - Avatar-specific overrides (ELYSIA/AEGIS)
+- `personalityOverrides.ts` - Avatar-specific overrides (KORA/AEGIS)
 - `index.ts` - Aggregator with `buildSystemInstruction(avatarStyle, memoryContext)`
 
 **Benefits:**

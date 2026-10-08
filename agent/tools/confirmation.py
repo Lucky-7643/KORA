@@ -2,7 +2,7 @@
 Two-step confirmation flow for dangerous power actions.
 
 Step 1: requestPowerAction(action) -> mints a single-use, short-lived token
-        and tells ELYSIA (via the result string) to ask the user to confirm.
+        and tells KORA (via the result string) to ask the user to confirm.
 Step 2: executePowerAction(action, execute_token) -> validates the token and,
         only if it matches & is unexpired, performs the gated action.
 
@@ -20,7 +20,7 @@ from ..registry import STATE, ToolError, register
 # Actions that can ONLY run after explicit confirmation.
 DANGEROUS_ACTIONS = {"shutdown", "restart", "sleep", "lock"}
 
-# Friendly human labels so ELYSIA's prompt-to-confirm reads naturally.
+# Friendly human labels so KORA's prompt-to-confirm reads naturally.
 ACTION_LABEL = {
     "shutdown": "shut down the computer",
     "restart": "restart the computer",
@@ -43,7 +43,7 @@ def _purge_expired() -> None:
 def request_power_action(args: Dict[str, Any]) -> Dict[str, Any]:
     """Mint a confirmation token for a dangerous action.
 
-    ELYSIA calls this first; the returned message instructs her to ask the
+    KORA calls this first; the returned message instructs her to ask the
     user out loud to confirm before the action runs.
     """
     action = (args.get("action") or "").strip().lower()
@@ -78,7 +78,7 @@ def request_power_action(args: Dict[str, Any]) -> Dict[str, Any]:
 def request_terminal_action(args: Dict[str, Any]) -> Dict[str, Any]:
     """Mint a confirmation token for a terminal command.
 
-    ELYSIA calls this first; the returned message instructs her to ask the
+    KORA calls this first; the returned message instructs her to ask the
     user out loud to confirm the command.
 
     Blacklisted commands are rejected immediately without asking the user.

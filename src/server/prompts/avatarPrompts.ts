@@ -1,5 +1,5 @@
 /**
- * Avatar and personality-specific prompts for ELYSIA.
+ * Avatar and personality-specific prompts for KORA.
  * Controls visual representation and character voice in responses.
  */
 

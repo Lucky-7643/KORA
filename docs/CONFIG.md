@@ -1,10 +1,10 @@
 # Configuration Guide
 
-This document explains how ELYSIA handles configuration, environment variables, and the precedence order for settings.
+This document explains how KORA handles configuration, environment variables, and the precedence order for settings.
 
 ## Configuration Hierarchy
 
-ELYSIA uses multiple configuration sources. Settings are applied in this order (later ones override earlier ones):
+KORA uses multiple configuration sources. Settings are applied in this order (later ones override earlier ones):
 
 1. **Defaults** — Built-in defaults in code
 2. **Environment Variables (`.env`)** — Read from `.env` file (gitignored, per-user)
@@ -15,7 +15,7 @@ ELYSIA uses multiple configuration sources. Settings are applied in this order (
 
 ## Environment Variables
 
-Environment variables are the primary way to configure ELYSIA at startup. Create a `.env` file in the project root (it's gitignored):
+Environment variables are the primary way to configure KORA at startup. Create a `.env` file in the project root (it's gitignored):
 
 ```bash
 # API Keys
@@ -26,16 +26,16 @@ PORT=3000
 NODE_ENV=development
 
 # Desktop Agent (Python FastAPI)
-ELYSIA_AGENT_HOST=127.0.0.1
-ELYSIA_AGENT_PORT=8765
-ELYSIA_PYTHON=/usr/bin/python3
+KORA_AGENT_HOST=127.0.0.1
+KORA_AGENT_PORT=8765
+KORA_PYTHON=/usr/bin/python3
 
 # Data Directory
-ELYSIA_DATA_DIR=~/.elysia
+KORA_DATA_DIR=~/.kora
 
 # Browser Automation
-ELYSIA_BROWSER_MODE=managed
-ELYSIA_CDP_URL=http://127.0.0.1:9222
+KORA_BROWSER_MODE=managed
+KORA_CDP_URL=http://127.0.0.1:9222
 ```
 
 ### Environment Variable Reference
@@ -45,23 +45,23 @@ ELYSIA_CDP_URL=http://127.0.0.1:9222
 | **GEMINI_API_KEY** | Google Gemini API authentication key | (required on first run) | string |
 | **PORT** | Node.js server port | `3000` | number |
 | **NODE_ENV** | Environment mode (`development`, `production`) | `development` | string |
-| **ELYSIA_AGENT_HOST** | Python agent host address | `127.0.0.1` | hostname |
-| **ELYSIA_AGENT_PORT** | Python agent port | `8765` | number |
-| **ELYSIA_PYTHON** | Path to Python 3 interpreter (for agent fallback) | Auto-detected | path |
-| **ELYSIA_DATA_DIR** | Directory for logs, memories, settings, etc. | `~/.elysia` or cwd | path |
-| **ELYSIA_BROWSER_MODE** | Browser automation mode: `managed` or `cdp` | `managed` | string |
-| **ELYSIA_CDP_URL** | Chrome DevTools Protocol URL (CDP mode only) | `http://127.0.0.1:9222` | URL |
+| **KORA_AGENT_HOST** | Python agent host address | `127.0.0.1` | hostname |
+| **KORA_AGENT_PORT** | Python agent port | `8765` | number |
+| **KORA_PYTHON** | Path to Python 3 interpreter (for agent fallback) | Auto-detected | path |
+| **KORA_DATA_DIR** | Directory for logs, memories, settings, etc. | `~/.kora` or cwd | path |
+| **KORA_BROWSER_MODE** | Browser automation mode: `managed` or `cdp` | `managed` | string |
+| **KORA_CDP_URL** | Chrome DevTools Protocol URL (CDP mode only) | `http://127.0.0.1:9222` | URL |
 
 ---
 
 ## Data Files
 
-All user data is stored as JSON files. The location is configurable via `ELYSIA_DATA_DIR`.
+All user data is stored as JSON files. The location is configurable via `KORA_DATA_DIR`.
 
 ### Data Directory Structure
 
 ```
-~/.elysia/          (default, or custom via ELYSIA_DATA_DIR)
+~/.kora/          (default, or custom via KORA_DATA_DIR)
 ├── logs/
 │   ├── agent.log              # Python agent logs
 │   ├── commands.log           # Executed tool commands
@@ -130,10 +130,10 @@ All user data is stored as JSON files. The location is configurable via `ELYSIA_
 # .env (development)
 NODE_ENV=development
 PORT=3000
-ELYSIA_AGENT_HOST=127.0.0.1
-ELYSIA_AGENT_PORT=8765
-ELYSIA_DATA_DIR=./data
-ELYSIA_BROWSER_MODE=managed
+KORA_AGENT_HOST=127.0.0.1
+KORA_AGENT_PORT=8765
+KORA_DATA_DIR=./data
+KORA_BROWSER_MODE=managed
 GEMINI_API_KEY=your_dev_key
 ```
 
@@ -149,10 +149,10 @@ python scripts/run_agent.py
 # .env (production)
 NODE_ENV=production
 PORT=3000
-ELYSIA_AGENT_HOST=127.0.0.1
-ELYSIA_AGENT_PORT=8765
-ELYSIA_DATA_DIR=~/.elysia
-ELYSIA_BROWSER_MODE=managed
+KORA_AGENT_HOST=127.0.0.1
+KORA_AGENT_PORT=8765
+KORA_DATA_DIR=~/.kora
+KORA_BROWSER_MODE=managed
 GEMINI_API_KEY=your_production_key
 ```
 
@@ -169,8 +169,8 @@ Use when you want to connect to an already-running Chrome instance via DevTools 
 
 ```bash
 # .env
-ELYSIA_BROWSER_MODE=cdp
-ELYSIA_CDP_URL=http://127.0.0.1:9222
+KORA_BROWSER_MODE=cdp
+KORA_CDP_URL=http://127.0.0.1:9222
 ```
 
 **Launch Chrome with CDP enabled:**
@@ -182,21 +182,21 @@ google-chrome --remote-debugging-port=9222
 
 ## API Key Management
 
-The Gemini API key is required to use ELYSIA. It's managed through a secure flow:
+The Gemini API key is required to use KORA. It's managed through a secure flow:
 
 ### First-Run Onboarding
 
-1. Launch ELYSIA
+1. Launch KORA
 2. The UI shows an **API Key Gate** overlay
 3. Paste your Gemini API key
-4. ELYSIA validates the key and stores it in `secrets.json`
+4. KORA validates the key and stores it in `secrets.json`
 
 ### Obtaining an API Key
 
 1. Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
 2. Click "Get API Key" → "Create API Key"
 3. Copy the generated key
-4. Paste into ELYSIA's API Key Gate
+4. Paste into KORA's API Key Gate
 
 ### Storing the Key Securely
 
@@ -208,7 +208,7 @@ The Gemini API key is required to use ELYSIA. It's managed through a secure flow
 
 ## Logger Configuration
 
-ELYSIA uses development-only logging. Logs are disabled in production (`NODE_ENV !== 'development'`).
+KORA uses development-only logging. Logs are disabled in production (`NODE_ENV !== 'development'`).
 
 ### Log Levels
 
@@ -227,7 +227,7 @@ except Exception as e:
     logging.warning("CDP connection failed, falling back to managed: %s", e)
 ```
 
-Check logs in `~/.elysia/logs/` to debug issues.
+Check logs in `~/.kora/logs/` to debug issues.
 
 ---
 
@@ -240,7 +240,7 @@ The Python agent is unreachable. Check:
 1. Is Python 3.11+ installed? `python3 --version`
 2. Are dependencies installed? `pip install -r agent/requirements.txt`
 3. Is Playwright installed? `python3 -m playwright install chromium`
-4. Check `~/.elysia/logs/startup.log` for errors
+4. Check `~/.kora/logs/startup.log` for errors
 
 ### "API Key was rejected"
 
@@ -267,8 +267,8 @@ PORT=3001 npm run dev
 If browser tools are failing:
 
 1. Check if Chrome/Chromium is installed
-2. Try `ELYSIA_BROWSER_MODE=managed` (default is usually better)
-3. Check `~/.elysia/logs/commands.log` for the failed command
+2. Try `KORA_BROWSER_MODE=managed` (default is usually better)
+3. Check `~/.kora/logs/commands.log` for the failed command
 4. For CDP mode, ensure Chrome is running: `google-chrome --remote-debugging-port=9222`
 
 ---
@@ -280,7 +280,7 @@ If browser tools are failing:
 Store all data (logs, memories, settings) in a custom location:
 
 ```bash
-ELYSIA_DATA_DIR=/var/lib/elysia npm run dev
+KORA_DATA_DIR=/var/lib/kora npm run dev
 ```
 
 ### Custom Python Interpreter
@@ -288,7 +288,7 @@ ELYSIA_DATA_DIR=/var/lib/elysia npm run dev
 If `python3` isn't on your PATH:
 
 ```bash
-ELYSIA_PYTHON=/opt/python/bin/python3 npm run dev
+KORA_PYTHON=/opt/python/bin/python3 npm run dev
 ```
 
 ### Debugging Mode
@@ -299,7 +299,7 @@ Enable verbose logging:
 NODE_ENV=development npm run dev
 ```
 
-Check `~/.elysia/logs/` for detailed output.
+Check `~/.kora/logs/` for detailed output.
 
 ---
 
@@ -308,6 +308,6 @@ Check `~/.elysia/logs/` for detailed output.
 1. **Never commit secrets** — `.env` and `secrets.json` are gitignored
 2. **Use environment variables in CI/CD** — Don't hardcode keys
 3. **Document custom overrides** — If you use non-standard config, document it
-4. **Back up data files** — `~/.elysia/` contains user memories and settings
+4. **Back up data files** — `~/.kora/` contains user memories and settings
 5. **Use version-pinned dependencies** — All Python packages are pinned (see `agent/requirements.txt`)
 

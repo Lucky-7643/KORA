@@ -1,5 +1,5 @@
 /**
- * System rules and core behavior instructions for ELYSIA's Gemini Live API integration.
+ * System rules and core behavior instructions for KORA's Gemini Live API integration.
  * These rules define the fundamental behaviors and constraints of the AI system.
  */
 

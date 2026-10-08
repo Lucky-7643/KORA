@@ -89,7 +89,7 @@ def camera_on(args: Dict[str, Any]) -> Dict[str, Any]:
             return {"result": f"Camera '{device}' opened (Photo Booth).", "device": device}
         if not os.path.exists(device):
             raise ToolError(f"Device '{device}' does not exist.")
-        proc = _launch_hyprland_float(["mpv", f"--input-ipc-server=/tmp/elysia_cam.sock", device])
+        proc = _launch_hyprland_float(["mpv", f"--input-ipc-server=/tmp/kora_cam.sock", device])
         _CAM_VIEWER_PROC["camera"] = proc
         return {"result": f"Camera '{device}' turned ON in a floating viewer.", "device": device}
     except Exception as e:
@@ -116,7 +116,7 @@ def camera_off(args: Dict[str, Any]) -> Dict[str, Any]:
             logging.debug("Failed to release camera (best-effort): %s", e)
     # Fallback: kill any stray mpv / Photo Booth we started.
     try:
-        subprocess.run(["pkill", "-f", "--", "/tmp/elysia_cam.sock"], check=False)
+        subprocess.run(["pkill", "-f", "--", "/tmp/kora_cam.sock"], check=False)
     except Exception as e:
         import logging
         logging.debug("Failed to kill stray mpv: %s", e)

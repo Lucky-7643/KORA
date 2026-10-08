@@ -1,15 +1,15 @@
-# Elysia-AI Repository Cleanup & Code Quality Summary
+# Kora-AI Repository Cleanup & Code Quality Summary
 
 ## Overview
 
-This document summarizes all work completed to professionalize and clean up the Elysia-AI repository, including both structural reorganization and code quality improvements.
+This document summarizes all work completed to professionalize and clean up the Kora-AI repository, including both structural reorganization and code quality improvements.
 
 ## Phase 1: Repository Restructuring (COMPLETED ✅)
 
 ### Achievements
 
 #### 1. Environment Variable Standardization
-- **Fixed:** Converted all `Elysia_*` to `ELYSIA_*` (uppercase standardized)
+- **Fixed:** Converted all `Kora_*` to `KORA_*` (uppercase standardized)
 - **Files:** `run_agent.py` and related configuration
 - **Impact:** Consistent environment handling across codebase
 
@@ -70,7 +70,7 @@ src/server/prompts/
 ├── index.ts                    # Aggregator & builder function
 ├── systemRules.ts             # Core behavior rules
 ├── avatarPrompts.ts           # Personality & emotion system
-├── personalityOverrides.ts    # Avatar-specific (ELYSIA/AEGIS)
+├── personalityOverrides.ts    # Avatar-specific (KORA/AEGIS)
 ├── toolUsage.ts               # Tool documentation
 └── memoryPrompts.ts           # Memory system instructions
 ```

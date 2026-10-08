@@ -33,7 +33,7 @@ metadata.json
 
 # Data directory (per-user, should not be committed)
 .data/
-~/.elysia/
+~/.kora/
 
 # Temporary files
 *.tmp
