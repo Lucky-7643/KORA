@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "npm run lint && tsx src/server/index.ts",
     "build": "npm run lint && vite build && npm run build:server && npm run validate:build",
-    "build:server": "esbuild src/server/index.ts --bundle --external:express --external:ws --external:dotenv --platform=node --format=cjs --sourcemap --outfile=dist/server.cjs",
+    "build:server": "esbuild src/server/index.ts --bundle --external:express --external:ws --external:dotenv --external:vite --platform=node --format=cjs --sourcemap --outfile=dist/server.cjs",
     "validate:build": "test -f dist/server.cjs && test -d dist/assets && echo '✓ Build validation passed'",
     "start": "node dist/server.cjs",
     "preview": "vite preview",
