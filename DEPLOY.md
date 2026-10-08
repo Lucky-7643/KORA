@@ -39,6 +39,29 @@ docker build -t kora .
 docker run -p 3000:3000 -e GEMINI_API_KEY=... kora
 ```
 
+## Option D – Vercel (from GitHub, no terminal)
+
+1. Push this repo to GitHub.
+2. Open **https://vercel.com/new/clone?repo-url=https://github.com/Lucky-7643/KORA**
+   (or Dashboard → *Add New → Project* → import the repo).
+3. Vercel reads `vercel.json`: it builds with `npm run build`, serves `dist/`
+   statically, and rewrites `/live` + `/api/*` (plus the SPA fallback) to the
+   `api/index.ts` function — which exports the same Express app *and* the native
+   WebSocket upgrade (`ws` is supported natively on Vercel Functions, public beta).
+4. Add the environment variable **`GEMINI_API_KEY`** under Settings →
+   Environment Variables.
+5. Click Deploy, open `https://<project>.vercel.app` — KORA runs in the browser.
+
+Vercel-specific notes:
+
+- **Voice sessions have a connection cap.** Functions with Fluid compute close a
+  WebSocket at the max duration. Free (Hobby) plan: **5 minutes per connection** —
+  a longer chat disconnects and you tap the mic to resume. Pro/Ent: ~13 min default
+  (800s) or 30 min with the extended max-duration beta.
+- `vercel.json` sets `KORA_DATA_DIR=/tmp/kora`, so memories/reminders persist per
+  function instance and reset on cold starts (no writable disk on serverless).
+- Desktop-control tools are local-machine only, as on every hosted option.
+
 ## Expected behavior on a hosted URL
 
 - The voice UI loads: speech + wake word ("Hey Kora") + live Gemini voice work in a

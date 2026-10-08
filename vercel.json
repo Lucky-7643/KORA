@@ -1,0 +1,19 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "env": {
+    "KORA_DATA_DIR": "/tmp/kora"
+  },
+  "functions": {
+    "api/*.ts": {
+      "maxDuration": 300
+    }
+  },
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/live", "dest": "/api/index" },
+    { "src": "/api/(.*)", "dest": "/api/index" },
+    { "src": "/(.*)", "dest": "/api/index" }
+  ]
+}

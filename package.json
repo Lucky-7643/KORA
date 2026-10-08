@@ -7,6 +7,9 @@
   "homepage": "https://github.com/Lucky-7643/KORA",
   "private": true,
   "version": "1.0.0",
+  "engines": {
+    "node": ">=22"
+  },
   "type": "module",
   "scripts": {
     "dev": "npm run lint && tsx src/server/index.ts",

@@ -284,11 +284,18 @@ async function callDesktopAgent(
   }
 }
 
-async function startServer() {
-  const app = express();
-  const PORT = Number(process.env.PORT || 3000);
+const PORT = Number(process.env.PORT || 3000);
 
-  app.use(express.json());
+// KORA's Express app, HTTP server, and WebSocket server are built at module
+// scope so Vercel Functions can import the exported http server (at the bottom
+// of this file) with every REST route and the /live WebSocket upgrade already
+// wired up — Vercel natively serves WebSockets using the `ws` library. When run
+// standalone (local dev, Docker, Render) the server instead binds PORT below.
+const app = express();
+const server = http.createServer(app);
+const wss = new WebSocketServer({ noServer: true });
+
+app.use(express.json());
 
   // Memory REST API Endpoints
   app.get("/api/memories", async (req, res) => {
@@ -815,15 +822,12 @@ async function startServer() {
     }
   });
   
-  // Custom server running with http.createServer so we can upgrade for WebSocket on port 4876
-  const server = http.createServer(app);
-  
-  // Setup WebSocket server
-  const wss = new WebSocketServer({ noServer: true });
-  
+  // Custom HTTP server running with http.createServer so we can upgrade for /
+  // live WebSocket connections. Both the local standalone /live path and
+  // Vercel's rewritten /api/index function path are accepted.
   server.on("upgrade", (request, socket, head) => {
     const pathname = new URL(request.url || '', `http://${request.headers.host}`).pathname;
-    if (pathname === "/live") {
+    if (pathname === "/live" || pathname === "/api/index") {
       wss.handleUpgrade(request, socket, head, (ws) => {
         wss.emit("connection", ws, request);
       });
@@ -1849,19 +1853,30 @@ async function startServer() {
     }
   });
 
-  // Serve custom static assets folder
+  // Dev-only helper: attach Vite's middleware to the Express app so the UI is
+// served live by the same server on localhost. Defined as an async function so
+// the production CJS bundle never executes it and esbuild never sees top-level
+// await at module scope.
+async function setupViteDevMiddleware(): Promise<void> {
+  const { createServer: createViteServer } = await import("vite");
+  const vite = await createViteServer({
+    server: { middlewareMode: true },
+    appType: "spa",
+  });
+  app.use(vite.middlewares);
+}
+
+// Serve custom static assets folder
   app.use("/assets", express.static(path.join(process.cwd(), "assets")));
 
   // Express Static assets / Vite Dev Middleware configuration
   if (process.env.NODE_ENV !== "production") {
     // Loaded lazily so the production bundle never requires vite (a dev-only
-    // dependency that is not shipped with the packaged app).
-    const { createServer: createViteServer } = await import("vite");
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: "spa",
-    });
-    app.use(vite.middlewares);
+    // dependency that is not shipped with the packaged app). Kept inside an
+    // async function so esbuild can still emit CJS (no top-level await).
+    void setupViteDevMiddleware().catch((e) =>
+      console.error("Vite dev middleware failed:", e)
+    );
   } else {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
@@ -1870,6 +1885,11 @@ async function startServer() {
     });
   }
 
+  // Standalone mode (local dev, Docker, Render): bind PORT and boot the
+  // desktop-agent probe + reminder timer. On Vercel, api/index.ts imports the
+  // http server exported below and the platform handles WebSocket + HTTP
+  // listening — a Vercel Function must never bind a port itself.
+  if (process.env.VERCEL !== "1") {
   server.listen(PORT, "0.0.0.0", async () => {
     logStartup(`KORA V2 server started on http://localhost:${PORT}`);
     console.log(`[Server] Running on http://localhost:${PORT}`);
@@ -1894,8 +1914,7 @@ async function startServer() {
       }
     });
   });
-}
+  }
 
-startServer().catch((error) => {
-  console.error("Failed to start server startup sequence:", error);
-});
+export { app, wss };
+export default server;
