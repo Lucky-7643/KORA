@@ -14,10 +14,21 @@
  */
 
 import fs from "fs";
+import os from "os";
 import path from "path";
 
-/** Writable per-user data directory. Falls back to cwd in development. */
-export const DATA_DIR: string = process.env.KORA_DATA_DIR || process.cwd();
+/**
+ * Writable per-user data directory.
+ * - Vercel Functions (VERCEL=1): serverless disks are read-only except the OS
+ *   temp dir, so we always use os.tmpdir() there (vercel.json sets
+ *   KORA_DATA_DIR=/tmp/kora too, but this guarantees a writable path even if
+ *   that env var is not applied at runtime).
+ * - Everything else: KORA_DATA_DIR if set, else the project root (dev).
+ */
+const isVercelRuntime = process.env.VERCEL === "1";
+export const DATA_DIR: string =
+  process.env.KORA_DATA_DIR ||
+  (isVercelRuntime ? path.join(os.tmpdir(), "kora") : process.cwd());
 
 try {
   fs.mkdirSync(DATA_DIR, { recursive: true });

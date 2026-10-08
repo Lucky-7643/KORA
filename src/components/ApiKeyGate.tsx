@@ -50,8 +50,20 @@ export function ApiKeyGate({ children }: { children: ReactNode }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ apiKey: key }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Could not save the key.");
+      // Surface the real server/platform response (some hosts return an HTML
+      // error page instead of JSON — show its first line rather than failing
+      // with a cryptic "Unexpected token" JSON parse error in the console).
+      const text = await res.text();
+      let data: any = null;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = null;
+      }
+      if (!res.ok || !data) {
+        const detail = data?.error || text.trim().split("\n")[0].slice(0, 160);
+        throw new Error(detail || `Server responded with HTTP ${res.status}.`);
+      }
       setValue("");
       setPhase("ready");
     } catch (err) {
