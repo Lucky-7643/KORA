@@ -54,6 +54,12 @@ docker run -p 3000:3000 -e GEMINI_API_KEY=... kora
 
 Vercel-specific notes:
 
+- **Import only the web app.** Because the repo also contains the local Python
+  desktop agent (`agent/requirements.txt` + `agent/server.py`), Vercel may say
+  "Multiple applications detected." Choose **standalone projects** and import
+  **only the root "kora" Node/Vite app** — the `agent/` project is a Windows
+  desktop helper and must not be deployed (`.vercelignore` also keeps its files
+  off the platform).
 - **Voice sessions have a connection cap.** Functions with Fluid compute close a
   WebSocket at the max duration. Free (Hobby) plan: **5 minutes per connection** —
   a longer chat disconnects and you tap the mic to resume. Pro/Ent: ~13 min default

@@ -1,0 +1,38 @@
+# Vercel deploy exclusions — the hosted site is the KORA web app only.
+# The Python `agent/` is the LOCAL desktop-control helper (Windows + your venv)
+# and must never be uploaded to a Vercel Function.
+
+agent/
+scripts/
+venv/
+__pycache__/
+*.pyc
+
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+
+.env
+.env*.local
+secrets.json
+memories.json
+settings.json
+reminders.json
+metadata.json
+.gemini/
+.data/
+.data.d/
+logs/
+logs_*.txt
+*.log
+WhatsApp*
+shot_*.png
+debug_*.png
+
+.vercel/
+.git/
+.vscode/
+.idea/
+*.swp
+.DS_Store
