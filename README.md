@@ -144,14 +144,9 @@ kora-ai-assistant/
 ├── .env                       # Environment variables (GEMINI_API_KEY, etc.)
 ├── .env.local                 # Environment template (no secrets)
 │
-├── public/
-│   └── assets/
-│       ├── idle.mp4 / idle.webm       # Character video — idle state
-│       ├── thinking.mp4 / thinking.webm # Character video — thinking state
-│       ├── talking.mp4 / talking.webm  # Character video — talking state
-│       ├── orb2.gif                   # Orb animation (alternative to character video)
-│       ├── bg-6.mp4 / bg-7.mp4        # Background ambient videos
-│       └── download.gif / download_static.png # Legacy orb assets
+├── public/                   # Copied into dist/ at build time
+│   └── assets/               # Particle-core only — no character videos / orb GIFs shipped
+│
 │
 │   ├── lib/
 │   │   ├── audio.ts           # PCM audio encoding/decoding for Gemini Live
@@ -251,11 +246,9 @@ See [scripts/README.md](scripts/README.md) for entry point scripts documentation
   - **Managed mode** (default): Playwright launches its own headed Chromium — works out of the box
   - **CDP mode**: Connects to the user's existing Chrome via `--remote-debugging-port=9222` — preserves cookies/logins
 
-### Holographic Character / Orb
-- Two visual styles:
-  - **Character mode**: Three MP4/WebM video states (idle, thinking, talking) with canvas-based holographic effects
-  - **Orb mode**: Animated GIF orb (e.g., `orb2.gif`) with state-driven scale/opacity transitions
-- Canvas renders particle rings, plasma core, emotion glow, scanlines, and mouse-tracking parallax
+### Holographic Particle Core
+- Single visual: the Three.js `GoldenHolographicCore` particle sphere
+- Canvas renders particle rings, plasma core, emotion glow, and mouse-tracking parallax
 - GPU acceleration via `translateZ(0)` and contrast/brightness/saturation CSS filters
 
 ---
