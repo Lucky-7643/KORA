@@ -1,10 +1,10 @@
 # Contributing to KORA
 
-Thanks for your interest! This is a personal project by **Sarang (SarangRao20)**, but contributions and suggestions are welcome.
+Thanks for your interest! This is a personal project by **Lucky (Lucky-7643)**, but contributions and suggestions are welcome.
 
 ## License
 
-This project is **all rights reserved** by Sarang Gajanan Rao. Forking on GitHub is welcome; copying or re-uploading the code elsewhere requires written permission. See [LICENSE](LICENSE).
+This project is **all rights reserved** by Lucky. Forking on GitHub is welcome; copying or re-uploading the code elsewhere requires written permission. See [LICENSE](LICENSE).
 
 By submitting a pull request, you grant the author the right to use and include your contribution in this project.
 

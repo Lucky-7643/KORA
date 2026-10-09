@@ -542,7 +542,7 @@ Quick reference:
 
 ## How This Was Built
 
-Designed and developed by **Sarang (SarangRao20)** — an independent developer focused on AI-powered desktop automation. Features:
+Designed and developed by **Lucky (Lucky-7643)** — an independent developer focused on AI-powered desktop automation. Features:
 - Holographic video character system + orb animation mode
 - Persistent memory with AI-powered extraction
 - Cross-platform desktop agent with 93 tools across 22 modules
@@ -563,8 +563,8 @@ Designed and developed by **Sarang (SarangRao20)** — an independent developer 
 
 ## License
 
-© 2026 Sarang Gajanan Rao. All rights reserved. Forking on GitHub is welcome; copying or re-uploading the code elsewhere requires written permission. See [LICENSE](LICENSE).
+© 2026 Lucky. All rights reserved. Forking on GitHub is welcome; copying or re-uploading the code elsewhere requires written permission. See [LICENSE](LICENSE).
 
 ---
 
-*Built by Sarang*
+*Built by Lucky*
