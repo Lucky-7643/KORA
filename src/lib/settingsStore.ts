@@ -71,9 +71,11 @@ export function loadSettings(): KoraSettings {
     if (!raw) return { ...DEFAULT_SETTINGS };
     const parsed = JSON.parse(raw) as Partial<KoraSettings>;
     const merged: KoraSettings = { ...DEFAULT_SETTINGS, ...parsed };
-    // Rename migration: the assistant used to be called KORA, now KORA.
+    // Rename migration: the assistant used to be called ELYSIA, now KORA.
     // Any stored wake phrase that still mentions the old name is upgraded.
-    if (typeof merged.wakePhrase === "string" && merged.wakePhrase.toLowerCase().includes("kora")) {
+    // (The old check looked for "kora" and would wrongly reset a custom
+    // phrase like "hey kora wake up" back to the default.)
+    if (typeof merged.wakePhrase === "string" && merged.wakePhrase.toLowerCase().includes("elysia")) {
       merged.wakePhrase = DEFAULT_SETTINGS.wakePhrase;
     }
     // Voice migration: the old default "Charon" is a deep MALE voice — the

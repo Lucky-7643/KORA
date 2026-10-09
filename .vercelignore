@@ -15,6 +15,11 @@ dist/
 
 .env
 .env*.local
+
+# Windows launchers / local-only helpers - never shipped to the host
+*.bat
+*.ps1
+*.vbs
 secrets.json
 memories.json
 settings.json
