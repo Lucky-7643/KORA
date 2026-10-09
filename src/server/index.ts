@@ -65,6 +65,15 @@ const DESKTOP_AGENT_URL = process.env.DESKTOP_AGENT_URL || "http://127.0.0.1:876
 const DESKTOP_AGENT_TIMEOUT = 25_000; // ms
 
 /**
+ * Per-tool timeout overrides (ms). Most desktop tools answer quickly, but
+ * browser-driven flows that may have to launch a browser, load a heavy web app
+ * and search for something need longer than the default 25s.
+ */
+const DESKTOP_TOOL_TIMEOUTS: Record<string, number> = {
+  sendWhatsAppMessage: 55_000,
+};
+
+/**
  * The complete set of tool names routed to the Python desktop agent.
  * Kept in sync with agent/registry.py DESKTOP_TOOL_NAMES.
  */
@@ -124,6 +133,8 @@ const DESKTOP_TOOLS: ReadonlySet<string> = new Set([
   "osType", "osPress", "osClick",
   // camera control
   "cameraList", "cameraOn", "cameraOff",
+  // messaging
+  "sendWhatsAppMessage",
 ]);
 
 /**
@@ -255,10 +266,11 @@ async function callDesktopAgent(
   if (!desktopAgentVerified) {
     await ensureDesktopAgent();
   }
+  const timeoutMs = DESKTOP_TOOL_TIMEOUTS[tool] ?? DESKTOP_AGENT_TIMEOUT;
   try {
     logCommand(`EXECUTE ${tool} ${JSON.stringify(args)}`);
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), DESKTOP_AGENT_TIMEOUT);
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
 
     const res = await fetch(`${DESKTOP_AGENT_URL}/execute`, {
       method: "POST",
@@ -940,6 +952,7 @@ app.use(express.json());
         "   - CLIPBOARD: Use 'copySelected' (sends Ctrl+C, reads clipboard), 'pasteClipboard' (writes + Ctrl+V), 'getClipboard', 'clearClipboard'.\n" +
         "   - SCREENSHOT & SCREEN READING: Use 'takeScreenshot', 'saveScreenshot', 'analyzeScreenshot' (OCR of the screen), 'readScreen' (OCR of the active window + its title). Use these to answer 'What error is showing on my screen?' or 'Read the visible text'.\n" +
         "   - DESKTOP BROWSER AUTOMATION (Playwright): Use the 'desktopBrowser*' tools to drive a REAL Chromium browser you own — open/navigate/search/click/type/fill forms/back/forward/scroll/open tab/close tab. This is separate from your holographic projector. Example: 'Fill in the login form on example.com' -> desktopBrowserOpen(url='example.com') then desktopBrowserFillForm(fields={...}).\n" +
+        "   - WHATSAPP MESSAGING: When the user asks to send a WhatsApp message to someone (e.g. 'WhatsApp par Vivek ko bol do ki ...', 'send Mom a WhatsApp saying ...', '<name> ko WhatsApp kar do'), ALWAYS call 'sendWhatsAppMessage' with the contact's NAME and the exact message text. NEVER try to drive WhatsApp manually with the desktopBrowser*/osType tools — this tool searches the contact by name, opens the chat and sends automatically. Pass the user's words as the message verbatim (do not rewrite or add extra text unless they asked you to). If it reports WhatsApp Web is not logged in, tell the user to open web.whatsapp.com once in the automation browser and scan the QR code, then ask them to try again.\n" +
         "   - CODING ASSISTANCE: Use 'createPythonFile', 'writeCodeFile' (any language), 'createProjectFolder' (with subfolders), 'runPythonScript' (captures output). Example: 'Create and run a hello world Python script' -> createPythonFile then runPythonScript, then read back the output naturally.\n" +
         "   - SYSTEM INFORMATION: Use 'systemInfo' (CPU/RAM/disk/uptime), 'gpuInfo' (NVIDIA stats), 'temperatureInfo' to answer 'How is my CPU usage?' or 'What's my GPU temperature?'.\n" +
         "   - BROWSER VISION: Use 'desktopBrowserReadText' to read the visible text content of a webpage (like an OCR for the browser). Use 'desktopBrowserGetLinks' to extract all links from the current page. These let you understand what's on screen without relying on the video feed.\n" +
@@ -1583,6 +1596,18 @@ app.use(express.json());
                   name: "cameraOff",
                   description: "Turn the webcam OFF and free the device for other applications. Use when user says 'camera band karo', 'webcam band karo'.",
                   parameters: { type: Type.OBJECT, properties: {} }
+                },
+                {
+                  name: "sendWhatsAppMessage",
+                  description: "Send a WhatsApp message to ANY contact by NAME using WhatsApp Web — no phone number needed. Use whenever the user says 'WhatsApp par <name> ko message bhej do', 'send <name> a WhatsApp saying ...', '<name> ko WhatsApp kar do'. The tool automatically searches the contact name, opens the chat and sends. If it reports WhatsApp Web is not logged in, tell the user to open web.whatsapp.com once and scan the QR code.",
+                  parameters: {
+                    type: Type.OBJECT,
+                    properties: {
+                      contact: { type: Type.STRING, description: "The contact's name as saved in WhatsApp, e.g. 'Vivek', 'Mom', 'Family Group'." },
+                      message: { type: Type.STRING, description: "The exact message text to send (verbatim)." }
+                    },
+                    required: ["contact", "message"]
+                  }
                 }
               ]
             }

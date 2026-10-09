@@ -214,6 +214,9 @@ DESKTOP_TOOL_NAMES = [
     "cameraList",
     "cameraOn",
     "cameraOff",
+
+    # ==== Messaging ====
+    "sendWhatsAppMessage",
 ]
 
 
@@ -249,6 +252,7 @@ def load_all() -> None:
     import agent.tools.os_input
     import agent.tools.google
     import agent.tools.camera
+    import agent.tools.messaging
 
 
 __all__ = ["TOOLS", "STATE", "DESKTOP_TOOL_NAMES", "ToolError", "register", "load_all"]
