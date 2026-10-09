@@ -285,6 +285,11 @@ async function callDesktopAgent(
 }
 
 const PORT = Number(process.env.PORT || 3000);
+// Bind host. Default to localhost so the always-on desktop server is NOT
+// reachable from other devices on a shared network (it exposes personal data
+// and a desktop-control bridge). Hosted deploys opt in via KORA_HOST=0.0.0.0
+// (set in the Dockerfile and render.yaml).
+const HOST = process.env.KORA_HOST || "127.0.0.1";
 
 // KORA's Express app, HTTP server, and WebSocket server are built at module
 // scope so Vercel Functions can import the exported http server (at the bottom
@@ -1890,9 +1895,9 @@ async function setupViteDevMiddleware(): Promise<void> {
   // http server exported below and the platform handles WebSocket + HTTP
   // listening — a Vercel Function must never bind a port itself.
   if (process.env.VERCEL !== "1") {
-  server.listen(PORT, "0.0.0.0", async () => {
-    logStartup(`KORA V2 server started on http://localhost:${PORT}`);
-    console.log(`[Server] Running on http://localhost:${PORT}`);
+  server.listen(PORT, HOST, async () => {
+    logStartup(`KORA V2 server started on http://${HOST}:${PORT}`);
+    console.log(`[Server] Running on http://${HOST}:${PORT}`);
     // Kick off the desktop agent (probe + auto-spawn) immediately on boot.
     ensureDesktopAgent().catch((e) =>
       console.warn(`[Desktop Agent] Boot probe failed: ${e?.message || e}`)

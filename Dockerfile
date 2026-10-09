@@ -10,6 +10,9 @@ RUN npm run build
 FROM node:22-alpine AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
+# Hosted container must accept external traffic (localhost default is for the
+# local desktop app only).
+ENV KORA_HOST=0.0.0.0
 COPY --from=build /app/package.json /app/package-lock.json ./
 RUN npm ci --omit=dev
 COPY --from=build /app/dist ./dist
